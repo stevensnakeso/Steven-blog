@@ -5,7 +5,7 @@
 ## 📁 测试结构
 
 ```
-hanphone-blog/
+steven-blog/
 ├── server/                          # Java Spring Boot 后端
 │   ├── test.py                      # 安全 & 功能回归测试 (39 用例)
 │   ├── stress_test.py               # 压力测试 (渐进式/固定/尖峰)
@@ -61,7 +61,7 @@ cd server
 # 安装依赖
 pip install requests
 
-# 运行全量测试（默认目标 https://hanphone.cn/api）
+# 运行全量测试（默认目标 https://steven.cn/api）
 python3 test.py
 
 # 指定目标服务器

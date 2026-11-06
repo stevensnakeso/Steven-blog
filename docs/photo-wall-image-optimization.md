@@ -6,7 +6,7 @@
 
 ## 根因
 
-现网（`hanphone.cn/atlas`）从建站起就没有任何缩略图，列表页直接 `<img src="原图">`。
+现网（`steven.cn/atlas`）从建站起就没有任何缩略图，列表页直接 `<img src="原图">`。
 截至改造前，墙上可见的 9 张照片合计 **44.53 MB**，单张最大 **12.08 MB**（`遐蝶2.png`）。
 
 放大问题的两个机制：
@@ -29,7 +29,7 @@ DOM 上没有 `width`/`height`，数据库里也没有宽高字段。加载前�
 
 ### 2. 生产机规格撑不住这个并发
 
-`hanphone.cn` 机器只有 **2 vCPU / 1941 MB 内存**，同时跑着 nginx、Spring Boot（504MB）、
+`steven.cn` 机器只有 **2 vCPU / 1941 MB 内存**，同时跑着 nginx、Spring Boot（504MB）、
 Next.js（214MB）和 4 个 pm2 Node 进程，可用内存长期在 600MB 上下。
 
 ### 3. Service Worker 把原图当缓存
@@ -89,8 +89,8 @@ ALTER TABLE public.atlas_files
 
 ```bash
 cd ~/server_file
-node scripts/backfill-thumbs.js --env /home/hanphone/server_atlas/.env --dry-run  # 先看
-node scripts/backfill-thumbs.js --env /home/hanphone/server_atlas/.env            # 再跑
+node scripts/backfill-thumbs.js --env /home/steven/server_atlas/.env --dry-run  # 先看
+node scripts/backfill-thumbs.js --env /home/steven/server_atlas/.env            # 再跑
 ```
 
 - 复用 `lib/thumbnail.js`，与新上传的照片 URL 规则完全一致。
@@ -242,19 +242,19 @@ CSS 里所有 `100vh` 改成 `var(--app-vh, 100vh)`（普通浏览器 / 未跑 J
 
 > 2026-10 更新：`admin-file` 已在响应层对 `-(320|800|1600)w.<hash>.webp` 直接发
 > `Cache-Control: public, max-age=31536000, immutable`，即使 nginx 不改也能生效。
-> 如果让 nginx 直接读盘 `/blog/`，完整示例见 `admin-file/nginx/hanphone.top.conf.example`；
+> 如果让 nginx 直接读盘 `/blog/`，完整示例见 `admin-file/nginx/steven.top.conf.example`；
 > 下面的配置仍适用于「nginx 直出 + 想显式声明缓存」的场景。
 
-改造后缩略图内容与 URL 一一对应，可以放心长期缓存。当前 `hanphone.top` 的
+改造后缩略图内容与 URL 一一对应，可以放心长期缓存。当前 `steven.top` 的
 `location /` 只给了 `max-age=604800`（7 天），够用但不极致。
 
-在 `/etc/nginx/conf.d/hanphone.top.conf` 的 `server` 块内，
+在 `/etc/nginx/conf.d/steven.top.conf` 的 `server` 块内，
 **放在 `location /` 之前**（`^~` 前缀优先，顺序其实无所谓，但放前面更易读）：
 
 ```nginx
 # 照片墙 / 随笔缩略图：文件名含源文件版本号，内容不变 URL 就不变，可永久缓存
 location ^~ /blog/atlas/ {
-    root /home/hanphone/server_file/uploads;
+    root /home/steven/server_file/uploads;
     try_files $uri @backend;
     expires 1y;
     add_header Cache-Control "public, max-age=31536000, immutable";
@@ -262,7 +262,7 @@ location ^~ /blog/atlas/ {
 }
 
 location ^~ /blog/essay/ {
-    root /home/hanphone/server_file/uploads;
+    root /home/steven/server_file/uploads;
     try_files $uri @backend;
     expires 1y;
     add_header Cache-Control "public, max-age=31536000, immutable";
@@ -278,7 +278,7 @@ location ^~ /blog/essay/ {
 
 ### 顺带发现：`location /atlas` 完全没有缓存头
 
-`hanphone.cn.conf` 的 `location /atlas` 块里没有任何 `add_header`，`index.html` /
+`steven.cn.conf` 的 `location /atlas` 块里没有任何 `add_header`，`index.html` /
 sw.js / JS chunk 全部走 nginx 默认（无 `Cache-Control`）。两个隐患：
 
 1. **`index.html` 被浏览器启发式缓存后，发版拿到的旧 HTML 会引用已被删除的 chunk 文件名 → 404 → 白屏。**
@@ -290,7 +290,7 @@ sw.js / JS chunk 全部走 nginx 默认（无 `Cache-Control`）。两个隐患�
 ```nginx
 # 带 hash 的构建产物：永久缓存
 location ^~ /atlas/assets/ {
-    alias /home/hanphone/html/atlas/assets/;
+    alias /home/steven/html/atlas/assets/;
     expires 1y;
     add_header Cache-Control "public, max-age=31536000, immutable";
     access_log off;
@@ -298,16 +298,16 @@ location ^~ /atlas/assets/ {
 
 # 入口文件与 SW：必须每次回源校验，否则发版后用户卡在旧版本
 location = /atlas/index.html {
-    alias /home/hanphone/html/atlas/index.html;
+    alias /home/steven/html/atlas/index.html;
     add_header Cache-Control "no-cache, must-revalidate";
 }
 location = /atlas/sw.js {
-    alias /home/hanphone/html/atlas/sw.js;
+    alias /home/steven/html/atlas/sw.js;
     add_header Cache-Control "no-cache, must-revalidate";
 }
 
 location /atlas {
-    alias /home/hanphone/html/atlas;
+    alias /home/steven/html/atlas;
     index index.html;
     try_files $uri $uri/ /atlas/index.html;
     add_header Cache-Control "no-cache, must-revalidate";
@@ -390,7 +390,7 @@ Android 真机（release APK，`versionCode 14`）装机后从 admin-file 访问
 是两套互不相通的存储。Android 原先完全没有注入，于是出现过一个迷惑现象：
 「从没给 WebView 写过 token，照片墙却显示已登录」。
 
-**真实原因**：照片墙**自带的登录页**（`/login`，走 `https://hanphone.cn/api/login`）
+**真实原因**：照片墙**自带的登录页**（`/login`，走 `https://steven.cn/api/login`）
 曾在 WebView 里被用过一次，而 `domStorageEnabled = true` 让 localStorage 按 origin
 持久留在 App 数据目录里，之后每次进入都带着那个 token。也就是说登录态长期
 「能用但与 App 不同步」——在 App 里退出登录后，照片墙仍显示已登录、还能点赞和进管理页。
@@ -401,13 +401,13 @@ Android 真机（release APK，`versionCode 14`）装机后从 admin-file 访问
 |---|---|
 | 注入时机 | `WebViewCompat.addDocumentStartJavaScript`，在页面自身 JS **之前**执行 |
 | 为什么不用 `onPageFinished` | 照片墙的 Pinia store 在模块初始化时**同步**读 localStorage（`store.ts`），晚一拍就晚了 |
-| origin 白名单 | 仅 `https://hanphone.cn` / `https://www.hanphone.cn`；项目页打开的外链拿不到 token |
+| origin 白名单 | 仅 `https://steven.cn` / `https://www.steven.cn`；项目页打开的外链拿不到 token |
 | App 未登录时 | 脚本**删除** `token`/`userInfo`/`expire`，而不是跳过 —— 否则页面里残留的旧 token 会继续生效 |
 | 登出清理 | `ProfileScreen` 的「退出」里调 `AuthBridge.clearWebStorage()`（`WebStorage.deleteAllData()`），因为登出时 WebView 实例往往已销毁，`evaluateJavascript` 不可靠 |
 | 降级 | WebView < 83 无该 API，走 `evaluateJavascript` + `reload()` |
 | 注入 vs 加载顺序 | 必须等 DataStore 真读到登录态再注入、再 `loadUrl`（见下方「顺序坑」） |
 
-两端用的是**同一个登录接口**（`POST https://hanphone.cn/api/login`，返回 `{user, token, expire}`），
+两端用的是**同一个登录接口**（`POST https://steven.cn/api/login`，返回 `{user, token, expire}`），
 所以 token 通用，无需换发。
 
 为此给 `AuthData` 补了 `username` 字段（登录名，非昵称）：照片墙管理页按登录名定位当前用户、
@@ -452,7 +452,7 @@ collectAsState(initial = AuthData())   ← 错
   没有任何数据库记录，疑似历史删除或入库失败留下的残留。
   根因是 `photo-wall-server/controller/admin/deletePhoto.js:32` 注释写着「仅删除数据库记录」，
   删照片时磁盘文件永不清理。**清理前需逐个确认引用**，本次未动。
-- **`path` 硬编码域名**：`admin-file/server.js:816` 固定拼 `https://hanphone.top/`，
+- **`path` 硬编码域名**：`admin-file/server.js:816` 固定拼 `https://steven.top/`，
   域名被冻进了数据库，换域名要写数据迁移。
 - **列表接口不分页**：`Atlas.vue` 请求 `/show` 时不带 `page`/`limit`，
   服务端其实支持（`controller/show.js:22-24`，上限 100），目前一次性拉全量。

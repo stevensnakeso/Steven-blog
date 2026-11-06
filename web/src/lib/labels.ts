@@ -122,7 +122,7 @@ export const FOOTER_LABELS = {
   TERMS: '用户协议',
   PRIVACY: '隐私条款',
   ICP_PREFIX: '备案号：',
-  COPYRIGHT: (year: number) => `© ${year} By Hanphone. All rights reserved.`
+  COPYRIGHT: (year: number) => `© ${year} By Steven. All rights reserved.`
 } as const
 
 // ==================== 管理后台导航 ====================

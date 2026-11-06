@@ -353,7 +353,7 @@ const noteColors = [
 
 onMounted(async () => {
   const bgImage = new Image();
-  bgImage.src = 'https://hanphone.top/blog/atlas/background.jpeg';
+  bgImage.src = 'https://steven.top/blog/atlas/background.jpeg';
   
   getTag();
   atlasShow();
@@ -710,7 +710,7 @@ watchEffect(() => {
 
 .welcome-row {
   background-color: #f8fafc;
-  background-image: url('https://hanphone.top/blog/atlas/background.jpeg');
+  background-image: url('https://steven.top/blog/atlas/background.jpeg');
   background-size: cover;
   background-position: center;
   height: 100%;
@@ -1524,7 +1524,7 @@ watchEffect(() => {
 
 /* ========== 响应式设计 ========== */
 @media screen and (max-width: 768px) {
-  .welcome-row { background-image: url('https://hanphone.top/blog/atlas/background.jpeg'); }
+  .welcome-row { background-image: url('https://steven.top/blog/atlas/background.jpeg'); }
   .welcome { width: 100%; }
   .border { display: none; }
   .tit { font-size: 2rem; width: 100%; line-height: 50px; letter-spacing: 2px; height: auto; }

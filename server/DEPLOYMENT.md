@@ -1,6 +1,6 @@
 # 后端部署指南
 
-本文档介绍 Hanphone's Blog 后端的两种生产部署方式：
+本文档介绍 Steven's Blog 后端的两种生产部署方式：
 
 | 方式 | 适用场景 | 说明 |
 | ---- | -------- | ---- |
@@ -32,16 +32,16 @@ mvn clean package
 ### 1. 准备目录
 
 ```bash
-mkdir -p /home/hanphone/server_blog/logs
+mkdir -p /home/steven/server_blog/logs
 # 将构建产物放到该目录
-# /home/hanphone/server_blog/blog-3.0.jar
+# /home/steven/server_blog/blog-3.0.jar
 ```
 
 ### 2. 配置环境变量
 
 ```bash
 cp env.example .env
-vim /home/hanphone/server_blog/.env
+vim /home/steven/server_blog/.env
 ```
 
 Systemd 原生支持加载 `.env` 文件，无需 `export` 前缀（与 [环境变量](#环境变量) 格式一致）。
@@ -59,14 +59,14 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/hanphone/server_blog
+WorkingDirectory=/home/steven/server_blog
 # 关键点：直接指定 .env 文件，Systemd 会自动解析并注入为环境变量
-EnvironmentFile=/home/hanphone/server_blog/.env
-ExecStart=/usr/bin/java -Xmx1024M -Xms256M -XX:+UseG1GC -jar /home/hanphone/server_blog/blog-3.0.jar
+EnvironmentFile=/home/steven/server_blog/.env
+ExecStart=/usr/bin/java -Xmx1024M -Xms256M -XX:+UseG1GC -jar /home/steven/server_blog/blog-3.0.jar
 Restart=on-failure
 RestartSec=10
-StandardOutput=append:/home/hanphone/server_blog/logs/out.log
-StandardError=append:/home/hanphone/server_blog/logs/error.log
+StandardOutput=append:/home/steven/server_blog/logs/out.log
+StandardError=append:/home/steven/server_blog/logs/error.log
 
 [Install]
 WantedBy=multi-user.target
@@ -86,10 +86,10 @@ sudo systemctl enable blog
 
 ```bash
 # 1) 上传到临时文件
-scp target/blog-3.0.jar <user>@<server>:/home/hanphone/server_blog/blog-3.0.jar.new
+scp target/blog-3.0.jar <user>@<server>:/home/steven/server_blog/blog-3.0.jar.new
 
 # 2) 原子替换（不影响运行中的进程）
-ssh <user>@<server> 'mv -f /home/hanphone/server_blog/blog-3.0.jar.new /home/hanphone/server_blog/blog-3.0.jar'
+ssh <user>@<server> 'mv -f /home/steven/server_blog/blog-3.0.jar.new /home/steven/server_blog/blog-3.0.jar'
 
 # 3) 重启服务
 ssh <user>@<server> 'sudo systemctl restart blog'
@@ -101,7 +101,7 @@ ssh <user>@<server> 'sudo systemctl restart blog'
 
 ```bash
 sudo journalctl -u blog -f                      # 实时查看系统日志
-tail -f /home/hanphone/server_blog/logs/out.log # 或看输出文件
+tail -f /home/steven/server_blog/logs/out.log # 或看输出文件
 ```
 
 ---
@@ -110,27 +110,27 @@ tail -f /home/hanphone/server_blog/logs/out.log # 或看输出文件
 
 后端使用 **DB-IP City Lite** 离线库把访客 IP 解析成国家/省份。该库每月更新一次，可用 `scripts/update-dbip.sh` 配 cron 自动拉取覆盖并重启服务。
 
-**默认无需配置 `.env`**：后端未设置 `GEO_DB_PATH` 时，会自动加载**当前工作目录**（即 systemd `WorkingDirectory`，如 `/home/hanphone/server_blog`）下的 `dbip-city-lite.mmdb`。而 `update-dbip.sh` 不传 `-p` 时也默认下载到脚本所在目录——因此只需把脚本放在后端服务目录并运行一次，即完成配置。
+**默认无需配置 `.env`**：后端未设置 `GEO_DB_PATH` 时，会自动加载**当前工作目录**（即 systemd `WorkingDirectory`，如 `/home/steven/server_blog`）下的 `dbip-city-lite.mmdb`。而 `update-dbip.sh` 不传 `-p` 时也默认下载到脚本所在目录——因此只需把脚本放在后端服务目录并运行一次，即完成配置。
 
 ```bash
-# 1. 把脚本放到后端服务目录（即 systemd WorkingDirectory，如 /home/hanphone/server_blog）
-sudo cp scripts/update-dbip.sh /home/hanphone/server_blog/update-dbip.sh
-sudo chmod +x /home/hanphone/server_blog/update-dbip.sh
+# 1. 把脚本放到后端服务目录（即 systemd WorkingDirectory，如 /home/steven/server_blog）
+sudo cp scripts/update-dbip.sh /home/steven/server_blog/update-dbip.sh
+sudo chmod +x /home/steven/server_blog/update-dbip.sh
 
 # 2. 立即手动执行一次验证（-s 为 systemd 服务名；mmdb 会下载到脚本同目录）
-sudo /home/hanphone/server_blog/update-dbip.sh -s blog
+sudo /home/steven/server_blog/update-dbip.sh -s blog
 
 # 3. 加入 crontab：每月 1 号凌晨 3 点自动更新
 sudo crontab -e
 # 添加一行（换成你的实际路径）：
-# 0 3 1 * *  /home/hanphone/server_blog/update-dbip.sh -s blog >> /var/log/update-dbip.log 2>&1
+# 0 3 1 * *  /home/steven/server_blog/update-dbip.sh -s blog >> /var/log/update-dbip.log 2>&1
 ```
 
 脚本会：下载 db-ip 官方当月 mmdb → 校验为有效 MaxMind DB 格式 → 覆盖目标文件（保留 `.bak` 备份）→ 重启 `-s` 指定的服务。不传 `-p` 时，mmdb 默认下载到脚本所在目录（`dbip-city-lite.mmdb`）。若需自定义路径，可设 `GEO_DB_PATH` 并配 `-p` 指向同一文件。
 
 > 参数说明见脚本头部注释（`-p` 可选默认脚本目录，`-s` 可选，`-n` 预演不落库）。所有路径/服务名由调用方传入，脚本本身不包含任何部署信息。
 >
-> 排查：若执行报 `sudo: update-dbip.sh: command not found`，是脚本不在 PATH 且未加执行权限。用绝对路径执行 `sudo /home/hanphone/server_blog/update-dbip.sh -s blog`，并先 `chmod +x`。
+> 排查：若执行报 `sudo: update-dbip.sh: command not found`，是脚本不在 PATH 且未加执行权限。用绝对路径执行 `sudo /home/steven/server_blog/update-dbip.sh -s blog`，并先 `chmod +x`。
 
 ### 8. 服务器侧代理（供 LMArena 等被墙信源采集）
 
@@ -149,13 +149,13 @@ gunzip -f mihomo.gz && chmod +x mihomo
 # 3) 后台运行 + 保活（无 sudo，用 crontab）
 cat > ~/mihomo/start.sh <<'EOF'
 #!/bin/bash
-cd /home/hanphone/mihomo || exit 0
+cd /home/steven/mihomo || exit 0
 if ! pgrep -f "mihomo -d" >/dev/null 2>&1; then
-  nohup ./mihomo -d /home/hanphone/mihomo -f /home/hanphone/mihomo/config.yaml >> /home/hanphone/mihomo/mihomo.log 2>&1 &
+  nohup ./mihomo -d /home/steven/mihomo -f /home/steven/mihomo/config.yaml >> /home/steven/mihomo/mihomo.log 2>&1 &
 fi
 EOF
 chmod +x ~/mihomo/start.sh
-crontab -l 2>/dev/null | { cat; echo "@reboot /home/hanphone/mihomo/start.sh"; echo "*/5 * * * * /home/hanphone/mihomo/start.sh >/dev/null 2>&1"; } | crontab -
+crontab -l 2>/dev/null | { cat; echo "@reboot /home/steven/mihomo/start.sh"; echo "*/5 * * * * /home/steven/mihomo/start.sh >/dev/null 2>&1"; } | crontab -
 
 # 4) 后端 .env 打开（改完重启 blog）
 # HOT_LMARENA_ENABLED=true

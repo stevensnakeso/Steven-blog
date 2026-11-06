@@ -50,7 +50,7 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("Hanphone Blog API 文档")
+                .title("Steven Blog API 文档")
                 .description("基于 Spring Boot 的个人博客后端系统 API 文档")
                 .version("3.0.0");
     }

@@ -68,7 +68,7 @@ public class HotPushNotifier {
         }
     }
 
-    /** 回退：经 hanphone-chat 内部接口广播（过渡期用；App 全量升级后可关闭） */
+    /** 回退：经 steven-chat 内部接口广播（过渡期用；App 全量升级后可关闭） */
     private void notifyViaChat(String title, String body) {
         if (internalApiKey == null || internalApiKey.isBlank()) {
             log.info("博客无设备 token 且未配置 internal.api.key，跳过热点推送");

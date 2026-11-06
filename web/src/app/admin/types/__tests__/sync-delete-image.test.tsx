@@ -20,7 +20,7 @@ import CategoryManagement from '../page'
 const CATEGORY = {
   id: 7,
   name: '后端',
-  pic_url: 'https://hanphone.top/blog%2Ftype%2Fbackend.jpeg',
+  pic_url: 'https://steven.top/blog%2Ftype%2Fbackend.jpeg',
   color: 'blue',
   blogs: []
 }

@@ -9,7 +9,7 @@
  */
 function getDbConnection() {
     $servername = "localhost";
-    $username = "hanphone";
+    $username = "steven";
     $password = "h17285";
     $database = "letter";
 

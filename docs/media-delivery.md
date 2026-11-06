@@ -100,7 +100,7 @@ VIDEO_HLS_SEGMENT_SECONDS=4
 VIDEO_TRANSCODE_CONCURRENCY=1
 VIDEO_FFMPEG_THREADS=2
 VIDEO_TRANSCODE_NICE=10
-PUBLIC_FILE_BASE_URL=https://hanphone.top
+PUBLIC_FILE_BASE_URL=https://steven.top
 ```
 
 ### 6.3 重新构建前端
@@ -120,10 +120,10 @@ pnpm --filter web build
 cd ~/server_file
 
 # 先看计划
-node scripts/transcode-videos.js --env /home/hanphone/server_file/.env --dry-run
+node scripts/transcode-videos.js --env /home/steven/server_file/.env --dry-run
 
 # 正式跑（建议低峰期 / nohup）
-nohup node scripts/transcode-videos.js --env /home/hanphone/server_file/.env \
+nohup node scripts/transcode-videos.js --env /home/steven/server_file/.env \
   > /tmp/transcode-videos.log 2>&1 &
 
 tail -f /tmp/transcode-videos.log
@@ -135,17 +135,17 @@ tail -f /tmp/transcode-videos.log
 
 ### 6.5 nginx 直接读盘
 
-把 [`admin-file/nginx/hanphone.top.conf.example`](../admin-file/nginx/hanphone.top.conf.example) 合并进
-`/etc/nginx/conf.d/hanphone.top.conf`：
+把 [`admin-file/nginx/steven.top.conf.example`](../admin-file/nginx/steven.top.conf.example) 合并进
+`/etc/nginx/conf.d/steven.top.conf`：
 
 ```bash
 sudo nginx -t && sudo nginx -s reload
 ```
 
-> **权限坑**：nginx worker 用户（`nginx` / `www-data`）必须能穿越 `/home/hanphone`。
+> **权限坑**：nginx worker 用户（`nginx` / `www-data`）必须能穿越 `/home/steven`。
 > 如果该目录是 `710`，nginx 的 `/blog/` 直出会一直回退到 Node。执行一次：
-> `sudo chmod o+x /home/hanphone`（只增加穿越权限，不开放目录列表）。
-> 生产机的应用脚本 `~/apply-nginx-hanphone-top.sh` 已包含这一步（会先备份并 `nginx -t`，失败自动回滚）。
+> `sudo chmod o+x /home/steven`（只增加穿越权限，不开放目录列表）。
+> 生产机的应用脚本 `~/apply-nginx-steven-top.sh` 已包含这一步（会先备份并 `nginx -t`，失败自动回滚）。
 
 要点：
 
@@ -178,17 +178,17 @@ Cloudflare 默认按扩展名缓存，`.m3u8` / `.ts` **不在**默认列表里�
 
 ```bash
 # 1) 视频状态
-curl -s 'https://hanphone.top/media/meta?path=blog/essay/foo.mp4' | jq
+curl -s 'https://steven.top/media/meta?path=blog/essay/foo.mp4' | jq
 
 # 2) HLS master / 分片
-curl -sI 'https://hanphone.top/hls/blog/essay/foo-<hash>/master.m3u8'
-curl -sI 'https://hanphone.top/hls/blog/essay/foo-<hash>/v0/seg_00000.ts'
+curl -sI 'https://steven.top/hls/blog/essay/foo-<hash>/master.m3u8'
+curl -sI 'https://steven.top/hls/blog/essay/foo-<hash>/v0/seg_00000.ts'
 
 # 3) 缓存头
-curl -sI 'https://hanphone.top/hls/.../v0/seg_00000.ts' | grep -i 'cache-control\|cf-cache-status'
+curl -sI 'https://steven.top/hls/.../v0/seg_00000.ts' | grep -i 'cache-control\|cf-cache-status'
 
 # 4) 下载原片（管理端同款）
-curl -sI 'https://hanphone.top/blog/essay/foo.mp4?download=1' | grep -i 'content-disposition'
+curl -sI 'https://steven.top/blog/essay/foo.mp4?download=1' | grep -i 'content-disposition'
 
 # 5) 原片仍在
 ls -lh ~/server_file/uploads/blog/essay/foo.mp4
@@ -208,4 +208,4 @@ ls -lh ~/server_file/uploads/blog/essay/foo.mp4
 - **重启**：队列在内存里，进程重启会丢失未完成任务；`status.json` 超过 6 小时会被判定失败，可重新上传/运行回填脚本。
 - **原片格式**：原片保留原格式，管理端下载/浏览器直链都不变；HLS 只是新增的播放副本。
 - **Android**：本次未改 Android，客户端仍使用原片 URL；HLS 只作用于 web/管理端。原片随时可下载，后续接 Media3/ExoPlayer 时再使用 `/media/meta` 里的 HLS。
-- **上传上限**：admin-file 自身允许 1 GB，但 `hanphone.top` 经过 Cloudflare。Cloudflare Free/Pro 的单请求上传上限是 **100 MB**（Business 200 MB），超过这个大小的视频会先被 Cloudflare 拒掉，请求到不了 admin-file。大视频请走 R2/对象存储直传、直连源站域名，或后续加分片上传。
+- **上传上限**：admin-file 自身允许 1 GB，但 `steven.top` 经过 Cloudflare。Cloudflare Free/Pro 的单请求上传上限是 **100 MB**（Business 200 MB），超过这个大小的视频会先被 Cloudflare 拒掉，请求到不了 admin-file。大视频请走 R2/对象存储直传、直连源站域名，或后续加分片上传。

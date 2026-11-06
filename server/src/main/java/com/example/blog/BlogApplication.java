@@ -22,7 +22,7 @@ public class BlogApplication {
         // 尝试多个可能的路径
         String[] possiblePaths = {
                 System.getProperty("user.dir") + "/.env",
-                "/home/hanphone/develop-projects/hanphone-blog-server/.env",
+                "/home/steven/develop-projects/steven-blog-server/.env",
                 "./.env",
                 "../.env"
         };

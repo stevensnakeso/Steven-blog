@@ -27,7 +27,7 @@ public class OAuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(OAuthController.class);
 
-    @Value("${FRONTEND_URL:https://hanphone.cn}")
+    @Value("${FRONTEND_URL:https://steven.cn}")
     private String frontendUrl;
 
     public OAuthController(Map<String, OAuthProvider> providers,

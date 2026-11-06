@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class TypeServiceImplTest {
 
-    private static final String PIC_URL = "https://hanphone.top/blog%2Ftype%2Fjava.jpeg";
+    private static final String PIC_URL = "https://steven.top/blog%2Ftype%2Fjava.jpeg";
 
     @Mock
     private TypeRepository typeRepository;

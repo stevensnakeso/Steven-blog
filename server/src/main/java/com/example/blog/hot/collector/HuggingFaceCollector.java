@@ -144,7 +144,7 @@ public class HuggingFaceCollector implements HotCollector {
     private JsonNode fetchJson(String url) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        headers.set(HttpHeaders.USER_AGENT, "hanphone-insight-bot");
+        headers.set(HttpHeaders.USER_AGENT, "steven-insight-bot");
         if (token != null && !token.isBlank()) {
             headers.setBearerAuth(token.trim());
         }

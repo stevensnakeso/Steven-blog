@@ -111,14 +111,14 @@ uploads/.video/blog/essay/foo-<版本hash>/         ← 派生目录
 - 上传接口收到视频后**只入队**，异步转码，不阻塞上传响应；默认并发 1、`nice` 降优先级，适配 2C/2G。
 - 删除原片会一并回收所有版本的派生目录。
 - `ffmpeg` / `ffprobe` 缺失时自动降级：不生成 HLS，原片仍可播放/下载，不影响上传。
-- **Cloudflare 上传上限**：经 `hanphone.top` 的请求受 Cloudflare 单请求大小限制（Free/Pro 100 MB，Business 200 MB），
+- **Cloudflare 上传上限**：经 `steven.top` 的请求受 Cloudflare 单请求大小限制（Free/Pro 100 MB，Business 200 MB），
   超过 100 MB 的视频会在到达 admin-file 前被拒；大视频请用 R2 直传、直连源站或分片上传。
 
 ```bash
 # 历史视频回填（原片保留，只补 HLS/海报）
 cd ~/server_file
-node scripts/transcode-videos.js --env /home/hanphone/server_file/.env --dry-run
-node scripts/transcode-videos.js --env /home/hanphone/server_file/.env
+node scripts/transcode-videos.js --env /home/steven/server_file/.env --dry-run
+node scripts/transcode-videos.js --env /home/steven/server_file/.env
 ```
 
 ### 缓存与 nginx
@@ -128,7 +128,7 @@ node scripts/transcode-videos.js --env /home/hanphone/server_file/.env
 - HLS playlist / 分片：`public, max-age=31536000, immutable`
 
 生产建议让 nginx 直接读 `uploads/` 与 `uploads/.video/`（`sendfile`），只把 miss 和 API 回源到 Node；
-示例见 [`nginx/hanphone.top.conf.example`](nginx/hanphone.top.conf.example)。
+示例见 [`nginx/steven.top.conf.example`](nginx/steven.top.conf.example)。
 
 > Cloudflare 默认只按扩展名缓存，`.m3u8` / `.ts` 不在默认列表里。**必须**给 `/hls/*` 加一条 Cache Rule
 > （Cache Eligibility: Eligible，Edge TTL 1 年），否则每个 HLS 分片都会回源到 3Mbps 的小机器。
@@ -171,7 +171,7 @@ admin-file/
 | `VIDEO_FFMPEG_THREADS` | `2` | ffmpeg 线程数 |
 | `VIDEO_TRANSCODE_NICE` | `10` | ffmpeg 的 nice 优先级 |
 | `VIDEO_TRANSCODE_TIMEOUT_MS` | `21600000` | 单任务超时（6 小时） |
-| `PUBLIC_FILE_BASE_URL` | `https://hanphone.top` | 返回给前端的绝对文件域名 |
+| `PUBLIC_FILE_BASE_URL` | `https://steven.top` | 返回给前端的绝对文件域名 |
 
 ### 原片下载
 

@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     locale: SITE_CONFIG.locale,
     url: SITE_URL,
     siteName: SITE_CONFIG.name,
-    title: `${SITE_CONFIG.name} - Hanphone's Blog`,
+    title: `${SITE_CONFIG.name} - Steven's Blog`,
     description: SITE_CONFIG.description,
     images: [
       {
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${SITE_CONFIG.name} - Hanphone's Blog`,
+    title: `${SITE_CONFIG.name} - Steven's Blog`,
     description: SITE_CONFIG.description,
     images: [`${SITE_URL}${SITE_CONFIG.images.ogImage}`],
     creator: SITE_CONFIG.social.twitter,

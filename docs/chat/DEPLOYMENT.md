@@ -1,8 +1,8 @@
-# HanPhone Chat 生产环境部署指南
+# Steven Chat 生产环境部署指南
 
-> 📦 本服务原属独立仓库 `HanphoneJan/hanphone-chat`，现已并入本仓库：源码在 `chat-server/`、
+> 📦 本服务原属独立仓库 `StevenJan/steven-chat`，现已并入本仓库：源码在 `chat-server/`、
 > 前端在 `apps/chat-client/`（nginx `/chat/` 托管）、协议见本目录 `android-protocol.md`。
-> 生产仍按以下 PM2（进程名 `hanphone-chat-server`）或 Docker 方式部署；改动源码后需
+> 生产仍按以下 PM2（进程名 `steven-chat-server`）或 Docker 方式部署；改动源码后需
 > `pnpm --filter chat-server build` 再重启进程。
 
 > 覆盖两种生产部署方式：**方案 A：Docker Compose（推荐，一键全栈）** 与
@@ -116,7 +116,7 @@ curl http://localhost:8080/api/actuator/health   # Blog 服务健康检查
 ### 3.3 启动 Qdrant（方案 B 需手动，方案 A 由 Compose 托管）
 
 ```bash
-docker run -d --name hanphone-qdrant \
+docker run -d --name steven-qdrant \
   -p 127.0.0.1:6333:6333 \
   -v qdrant_data:/qdrant/storage \
   qdrant/qdrant:latest
@@ -232,7 +232,7 @@ VITE_SOCKET_URL=https://api.example.com
 VITE_AUTH_BASE_URL=https://blog.example.com
 ```
 
-> **关于 `VITE_AUTH_BASE_URL`**：登录接口 `POST /api/login` 由 **blog 服务**（Spring Boot，默认端口 8090）提供（见 `hanphone-blog/server` 的 `UserController`）。客户端会将 `${VITE_AUTH_BASE_URL}/api/login` 拼成登录 URL（见 `client/src/config/api.ts`），因此这里填 **blog 服务的根地址**（如 `http://localhost:8090`），不要带 `/api` 后缀。聊天后端没有登录路由，即使前后端同域也**必须**配置此项。
+> **关于 `VITE_AUTH_BASE_URL`**：登录接口 `POST /api/login` 由 **blog 服务**（Spring Boot，默认端口 8090）提供（见 `steven-blog/server` 的 `UserController`）。客户端会将 `${VITE_AUTH_BASE_URL}/api/login` 拼成登录 URL（见 `client/src/config/api.ts`），因此这里填 **blog 服务的根地址**（如 `http://localhost:8090`），不要带 `/api` 后缀。聊天后端没有登录路由，即使前后端同域也**必须**配置此项。
 
 ### 4.4 FCM 推送（可选，Android App 杀进程兜底）
 
@@ -241,15 +241,15 @@ VITE_AUTH_BASE_URL=https://blog.example.com
 **1) 服务端放服务账号私钥**（Firebase 控制台 → 项目设置 → 服务账号 → 生成新的私钥）：
 
 ```bash
-mkdir -p /home/hanphone/secrets
-# 上传 hanphone-blog-firebase-adminsdk-xxxx.json 到该目录
-chmod 600 /home/hanphone/secrets/hanphone-blog-firebase-adminsdk-xxxx.json
+mkdir -p /home/steven/secrets
+# 上传 steven-blog-firebase-adminsdk-xxxx.json 到该目录
+chmod 600 /home/steven/secrets/steven-blog-firebase-adminsdk-xxxx.json
 ```
 
 chat-server 的 `.env` 加：
 
 ```env
-FCM_SERVICE_ACCOUNT=/home/hanphone/secrets/hanphone-blog-firebase-adminsdk-xxxx.json
+FCM_SERVICE_ACCOUNT=/home/steven/secrets/steven-blog-firebase-adminsdk-xxxx.json
 # 国内服务器出网到 Google 必须走代理（如本机 mihomo），否则发送报 ETIMEDOUT
 FCM_PROXY=http://127.0.0.1:7890
 ```
@@ -259,8 +259,8 @@ FCM_PROXY=http://127.0.0.1:7890
 重启后日志出现 `[FCM] 服务账号已加载：<project_id>（经代理 …）` 即成功：
 
 ```bash
-pm2 restart hanphone-chat-server --update-env
-pm2 logs hanphone-chat-server --lines 50
+pm2 restart steven-chat-server --update-env
+pm2 logs steven-chat-server --lines 50
 ```
 
 **2) 建表**（`device_tokens`，见仓库根 `init.sql`，幂等）：
@@ -271,7 +271,7 @@ psql -h 127.0.0.1 -U chat_db -d chat_db -f init.sql
 
 **3) blog 后端**：`server/.env` 用默认 `CHAT_API_BASE_URL=http://127.0.0.1:4010` 即可（chat-server 同机）。热点采集完成后会调用 chat-server `/chat-api/internal/push` 广播；`x-internal-key` 用 **chat↔blog 共享密钥**（blog 的 `INTERNAL_API_KEY`，等于 chat-server 的 `BLOG_INTERNAL_KEY`）。
 
-**4) Android**：在 Firebase 项目添加包名 `com.hanphone.blog` 的 Android 应用，下载 `google-services.json` 放到 `android/app/`，重新打包安装；App 启动后会把 token 上报到 `/chat-api/api/devices`。缺失该文件时构建仍成功、FCM 自动禁用。
+**4) Android**：在 Firebase 项目添加包名 `com.steven.blog` 的 Android 应用，下载 `google-services.json` 放到 `android/app/`，重新打包安装；App 启动后会把 token 上报到 `/chat-api/api/devices`。缺失该文件时构建仍成功、FCM 自动禁用。
 
 **验证**：
 
@@ -373,7 +373,7 @@ python -m uvicorn api.main:app --host 0.0.0.0 --port 8001 --workers 2
 module.exports = {
   apps: [
     {
-      name: "hanphone-chat-server",
+      name: "steven-chat-server",
       cwd: __dirname,
       script: "./dist/server.js",
       node_args: "--import=dotenv/config",   // 自动加载 server/.env
@@ -414,7 +414,7 @@ pnpm build                                # 产出 dist/
 
 ### 6.5 Nginx 反向代理配置
 
-创建 `/etc/nginx/conf.d/hanphone-chat.conf`：
+创建 `/etc/nginx/conf.d/steven-chat.conf`：
 
 ```nginx
 # 仅在 WebSocket 升级请求时传递 Connection: upgrade，普通 HTTP 请求保持默认
@@ -428,7 +428,7 @@ server {
     server_name chat.example.com;
 
     # Client 静态资源（base 为 /chat/）
-    root /var/www/hanphone-chat;
+    root /var/www/steven-chat;
     index index.html;
 
     gzip on;
@@ -473,11 +473,11 @@ nginx -t && nginx -s reload
 
 ### 6.6 （可选）用 systemd 守护 Agent Service
 
-创建 `/etc/systemd/system/hanphone-agent.service`：
+创建 `/etc/systemd/system/steven-agent.service`：
 
 ```ini
 [Unit]
-Description=HanPhone Agent Service
+Description=Steven Agent Service
 After=network.target
 
 [Service]
@@ -493,7 +493,7 @@ WantedBy=multi-user.target
 
 ```bash
 systemctl daemon-reload
-systemctl enable --now hanphone-agent
+systemctl enable --now steven-agent
 ```
 
 ---
@@ -503,11 +503,11 @@ systemctl enable --now hanphone-agent
 ```bash
 # 1. Server 健康检查
 curl http://127.0.0.1:4010/health
-# {"status":"healthy","service":"hanphone-server",...}
+# {"status":"healthy","service":"steven-server",...}
 
 # 2. Agent Service 健康检查
 curl http://127.0.0.1:8001/health
-# {"status":"healthy","active_skill":{"id":"hanphone",...}}
+# {"status":"healthy","active_skill":{"id":"steven",...}}
 
 # 3. Qdrant 健康检查
 curl http://127.0.0.1:6333/healthz
@@ -528,12 +528,12 @@ pm2 status
 
 ```bash
 pm2 list                    # 进程列表
-pm2 logs hanphone-chat-server          # 实时日志
-pm2 logs --lines 200 hanphone-chat-server  # 最近 200 行
-pm2 restart hanphone-chat-server       # 重启
-pm2 reload hanphone-chat-server        # 平滑重启（load 均衡）
-pm2 stop hanphone-chat-server          # 停止
-pm2 delete hanphone-chat-server        # 删除进程（不删除 dist）
+pm2 logs steven-chat-server          # 实时日志
+pm2 logs --lines 200 steven-chat-server  # 最近 200 行
+pm2 restart steven-chat-server       # 重启
+pm2 reload steven-chat-server        # 平滑重启（load 均衡）
+pm2 stop steven-chat-server          # 停止
+pm2 delete steven-chat-server        # 删除进程（不删除 dist）
 pm2 monit                   # 资源监控面板
 pm2 save                    # 保存当前进程列表
 pm2 startup                 # 开机自启
@@ -555,7 +555,7 @@ pnpm install --frozen-lockfile
 pnpm build
 
 # 3. 滚动重启
-pm2 restart hanphone-chat-server
+pm2 restart steven-chat-server
 
 # 4. 若前端有改动，重新构建并部署 dist
 cd client
@@ -570,7 +570,7 @@ pnpm build
 # Server：切回上一个 git tag/commit 后重新构建重启
 git checkout <上一个版本tag>
 pnpm build
-pm2 restart hanphone-chat-server
+pm2 restart steven-chat-server
 
 # 前端：保留上一版本 dist 目录，Nginx 指向回滚即可
 # 数据库：chat_db 建议每日 pg_dump 备份

@@ -100,7 +100,7 @@ jobs:
   # 之前在 x86_64 runner 上交叉编译（--target aarch64-unknown-linux-gnu + PKG_CONFIG_ALLOW_CROSS=1）
   # 会把宿主机的 x86_64 GTK/WebKit 库交给 aarch64 链接器，导致：
   #   collect2: error: ld returned 1 exit status
-  #   error: could not compile `hanphone-blog` (lib) due to 1 previous error
+  #   error: could not compile `steven-blog` (lib) due to 1 previous error
   # 原生构建可完全避免 sysroot/pkg-config 跨架构问题，产物也更可靠。
   build-linux-arm64:
     name: Linux ARM64

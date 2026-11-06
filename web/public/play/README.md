@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎮 hanphone-play
+# 🎮 steven-play
 
 **寒枫的有趣网页合集**
 
@@ -12,7 +12,7 @@
 
 | 图标 | 项目                            | 目录         |   分类   |
 | :--: | ------------------------------- | ------------ | :------: |
-|  🎉  | [Hanphone&#39;s Congratulation](./congratulation/) | `congratulation` |  `节日`  |
+|  🎉  | [Steven&#39;s Congratulation](./congratulation/) | `congratulation` |  `节日`  |
 |  💌  | [来自寒枫的信](./letter/web/envelope.html)         | `letter`           |  `爱情`  |
 |  📖  | [博客阅读器](./read/replicant/)                     | `read`             |  `工具`  |
 |  📄  | [寒枫 - 个人简历](./resume/)                       | `resume`           |  `工具`  |

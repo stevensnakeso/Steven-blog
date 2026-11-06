@@ -28,11 +28,11 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("Hanphone Blog API 接口文档")
+                .title("Steven Blog API 接口文档")
                 .description("基于 Spring Boot 的个人博客后端系统 API 接口文档")
                 .contact(new Contact()
-                        .name("Hanphone")
-                        .url("https://github.com/HanphoneJan")
+                        .name("Steven")
+                        .url("https://github.com/StevenJan")
                         .email("janhizian@qq.com"))
                 .version("3.0.0");
     }

@@ -1,6 +1,6 @@
 # 01 - 系统架构总览
 
-> 本文档介绍 HanPhone Chat 的整体架构设计、技术选型和组件关系
+> 本文档介绍 Steven Chat 的整体架构设计、技术选型和组件关系
 
 ---
 
@@ -250,7 +250,7 @@
 ## 📁 目录结构
 
 ```
-hanphone-chat/
+steven-chat/
 ├── client/                     # React前端
 │   ├── src/
 │   │   ├── contexts/          # ChatContext / PublicChatContext 状态管理

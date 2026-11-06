@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Hanphone Blog Server — 安全 & 功能回归测试
-用法: python3 test.py [--base-url https://hanphone.cn/api] [--skip-t11]
+Steven Blog Server — 安全 & 功能回归测试
+用法: python3 test.py [--base-url https://steven.cn/api] [--skip-t11]
 """
 import sys
 import json
@@ -18,7 +18,7 @@ import requests
 # =============================================================================
 # 配置
 # =============================================================================
-BASE_URL = "https://hanphone.cn/api"
+BASE_URL = "https://steven.cn/api"
 TIMEOUT = 30
 
 # ANSI 颜色

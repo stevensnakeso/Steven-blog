@@ -6,7 +6,7 @@
  * 缩略图生成逻辑与上传时完全一致（复用 lib/thumbnail.js），保证新老图片 URL 规则一致。
  *
  * 用法（在部署机 ~/server_file 下执行）：
- *   node scripts/backfill-thumbs.js --env /home/hanphone/server_atlas/.env [--dry-run] [--force] [--target essay]
+ *   node scripts/backfill-thumbs.js --env /home/steven/server_atlas/.env [--dry-run] [--force] [--target essay]
  *
  * 参数：
  *   --env <path>       读取服务端 .env 取数据库连接参数（Spring Boot 用 PG_*，photo-wall-server 用 DB_*）
@@ -96,8 +96,8 @@ function readDbConfig(env) {
 // URL → 磁盘相对路径
 //
 // 现网 DB 里存在两种 URL 形态（都能正常访问）：
-//   https://hanphone.top/blog/atlas/xxx.jpg          （旧数据，按 / 分段）
-//   https://hanphone.top/blog%2Fatlas/%E9%81%90...png （新数据，整串编码过 /）
+//   https://steven.top/blog/atlas/xxx.jpg          （旧数据，按 / 分段）
+//   https://steven.top/blog%2Fatlas/%E9%81%90...png （新数据，整串编码过 /）
 // 统一走 decodeURIComponent 后归一化成 blog/atlas/xxx.png
 // ---------------------------------------------------------------------------
 function urlToRelPath(rawUrl) {
@@ -241,7 +241,7 @@ async function main() {
     // 列表页默认缩略图：800w，回退 320w
     const thumbRel = thumbs["800"] || thumbs["320"] || null;
     const thumbPath = thumbRel
-      ? `https://hanphone.top/${encode(thumbRel)}`
+      ? `https://steven.top/${encode(thumbRel)}`
       : null;
     const widths = Object.keys(thumbs)
       .filter((k) => thumbs[k])

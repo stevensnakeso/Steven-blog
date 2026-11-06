@@ -61,7 +61,7 @@ public class HttpJsonSupport {
         RestTemplate rt = proxyTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
-        httpHeaders.set(HttpHeaders.USER_AGENT, "hanphone-insight-bot");
+        httpHeaders.set(HttpHeaders.USER_AGENT, "steven-insight-bot");
         if (headers != null) {
             headers.forEach(httpHeaders::set);
         }
@@ -102,7 +102,7 @@ public class HttpJsonSupport {
     public JsonNode getJson(java.net.URI uri, Map<String, String> headers) throws Exception {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
-        httpHeaders.set(HttpHeaders.USER_AGENT, "hanphone-insight-bot");
+        httpHeaders.set(HttpHeaders.USER_AGENT, "steven-insight-bot");
         if (headers != null) {
             headers.forEach(httpHeaders::set);
         }
@@ -119,7 +119,7 @@ public class HttpJsonSupport {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
-        httpHeaders.set(HttpHeaders.USER_AGENT, "hanphone-insight-bot");
+        httpHeaders.set(HttpHeaders.USER_AGENT, "steven-insight-bot");
         if (headers != null) {
             headers.forEach(httpHeaders::set);
         }
@@ -131,7 +131,7 @@ public class HttpJsonSupport {
     public String getRaw(String url, Map<String, String> headers, List<MediaType> accept) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(accept);
-        httpHeaders.set(HttpHeaders.USER_AGENT, "hanphone-insight-bot");
+        httpHeaders.set(HttpHeaders.USER_AGENT, "steven-insight-bot");
         if (headers != null) {
             headers.forEach(httpHeaders::set);
         }

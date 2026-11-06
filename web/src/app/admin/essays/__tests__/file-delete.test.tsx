@@ -29,7 +29,7 @@ describe('随笔管理页 - 删除随笔文件', () => {
 
     // 通过 URL 直填添加一个文件
     const urlInput = screen.getByPlaceholderText('直接填入文件URL，如 https://example.com/file.jpg')
-    await user.type(urlInput, 'https://hanphone.top/blog/essay/note.md')
+    await user.type(urlInput, 'https://steven.top/blog/essay/note.md')
     await user.click(screen.getByRole('button', { name: '添加URL' }))
 
     // 文件卡片出现（文件名）
@@ -58,7 +58,7 @@ describe('随笔管理页 - 删除随笔文件', () => {
     render(<EssayManagementPage />)
 
     const urlInput = screen.getByPlaceholderText('直接填入文件URL，如 https://example.com/file.jpg')
-    await user.type(urlInput, 'https://hanphone.top/blog/essay/note.md')
+    await user.type(urlInput, 'https://steven.top/blog/essay/note.md')
     await user.click(screen.getByRole('button', { name: '添加URL' }))
 
     await waitFor(() => {
@@ -79,7 +79,7 @@ describe('随笔管理页 - 删除随笔文件', () => {
       )
       expect(deleteCall).toBeTruthy()
       expect(deleteCall![0]).toMatchObject({
-        url: 'https://hanphone.top/delete/',
+        url: 'https://steven.top/delete/',
         method: 'DELETE',
         data: { name: 'note.md', namespace: 'blog/essay', isDirectory: false }
       })

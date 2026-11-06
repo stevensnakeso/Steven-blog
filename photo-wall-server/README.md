@@ -1,4 +1,4 @@
-# 🖼️ 寒枫的照片墙服务端 | Hanphone's Photo Wall Server
+# 🖼️ 寒枫的照片墙服务端 | Steven's Photo Wall Server
 
 ## 📌 项目简介
 
@@ -29,7 +29,7 @@
   <img src="https://img.shields.io/badge/PWA-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white" alt="PWA">
 </p>
 
-- 对应仓库：[`HanphoneJan/photo-wall`](https://github.com/HanphoneJan/photo-wall)
+- 对应仓库：[`StevenJan/photo-wall`](https://github.com/StevenJan/photo-wall)
 - 技术方向：Vue 3 + Vite + Element Plus + PWA
 - 使用方式：前端负责界面展示、交互与多端适配，当前仓库提供配套接口能力
 

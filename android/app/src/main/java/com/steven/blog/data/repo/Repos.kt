@@ -1,0 +1,360 @@
+package com.steven.blog.data.repo
+
+import com.steven.blog.data.api.ApiClient
+import com.steven.blog.data.api.BlogApi
+import com.steven.blog.data.api.FileApi
+import com.steven.blog.data.api.UploadAvatarResult
+import com.steven.blog.data.auth.TokenStore
+import com.steven.blog.data.chat.ChatMessagesResponse
+import com.steven.blog.data.chat.ChatUnreadResponse
+import com.steven.blog.data.chat.ChatUsersResponse
+import com.steven.blog.data.chat.ChatAdminResponse
+import com.steven.blog.data.chat.DeviceAck
+import com.steven.blog.data.chat.DeviceTokenBody
+import com.steven.blog.data.model.ApiResult
+import com.steven.blog.data.model.BenchmarkMeta
+import com.steven.blog.data.model.Blog
+import com.steven.blog.data.model.Comment
+import com.steven.blog.data.model.Doc
+import com.steven.blog.data.model.Essay
+import com.steven.blog.data.model.EssayComment
+import com.steven.blog.data.model.FriendLink
+import com.steven.blog.data.model.HotFeedItem
+import com.steven.blog.data.model.HotOverview
+import com.steven.blog.data.model.HotSourceStatus
+import com.steven.blog.data.model.LeaderboardTrend
+import com.steven.blog.data.model.LoginData
+import com.steven.blog.data.model.Message
+import com.steven.blog.data.model.ModelBenchmarkRow
+import com.steven.blog.data.model.ModelCompare
+import com.steven.blog.data.model.ModelLeaderboard
+import com.steven.blog.data.model.PageResult
+import com.steven.blog.data.model.Project
+import com.steven.blog.data.model.SearchResultItem
+import com.steven.blog.data.model.SiteStats
+import com.steven.blog.data.model.Tag
+import com.steven.blog.data.model.Type
+import com.steven.blog.data.model.User
+import com.steven.blog.data.model.Vendor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+
+private const val PAGE_SIZE = 10
+
+/** 博客 + 站点元信息 */
+class BlogRepository(private val api: BlogApi = ApiClient.api) {
+
+    suspend fun blogs(page: Int = 1, size: Int = PAGE_SIZE): ApiResult<PageResult<Blog>> =
+        withContext(Dispatchers.IO) { api.blogs(page, size) }
+
+    suspend fun blog(id: Long): ApiResult<Blog> =
+        withContext(Dispatchers.IO) { api.blog(id) }
+
+    /** page 统一使用 1 起始，内部转成 Spring 的 0 起始 */
+    suspend fun blogsByType(typeId: Long, page: Int = 1, size: Int = PAGE_SIZE): ApiResult<PageResult<Blog>> =
+        withContext(Dispatchers.IO) { api.blogsByType(typeId, page - 1, size) }
+
+    suspend fun blogsByTag(tagId: Long, page: Int = 1, size: Int = PAGE_SIZE): ApiResult<PageResult<Blog>> =
+        withContext(Dispatchers.IO) { api.blogsByTag(tagId, page - 1, size) }
+
+    suspend fun fullTypes(): ApiResult<List<Type>> =
+        withContext(Dispatchers.IO) { api.fullTypeList() }
+
+    suspend fun fullTags(): ApiResult<List<Tag>> =
+        withContext(Dispatchers.IO) { api.fullTagList() }
+
+    suspend fun archiveBlog(): ApiResult<Map<String, List<Blog>>> =
+        withContext(Dispatchers.IO) { api.archiveBlog() }
+
+    suspend fun siteStats(): ApiResult<SiteStats> =
+        withContext(Dispatchers.IO) { api.siteStats() }
+
+    suspend fun visitCount(): ApiResult<Long> =
+        withContext(Dispatchers.IO) { api.visitCount() }
+
+    suspend fun friendLinks(): ApiResult<List<FriendLink>> =
+        withContext(Dispatchers.IO) { api.friendLinks() }
+
+    suspend fun search(query: String, limit: Int = 20): ApiResult<List<SearchResultItem>> =
+        withContext(Dispatchers.IO) { api.search(query, limit) }
+
+    /** 全部公开项目（type 可为 null 拉全量，前端分组筛选） */
+    suspend fun projects(type: Int? = null): ApiResult<List<Project>> =
+        withContext(Dispatchers.IO) { api.projects(type) }
+
+    /** 文库全部公开文件（前端按 docNamespace 构建文件夹树） */
+    suspend fun docs(): ApiResult<List<Doc>> =
+        withContext(Dispatchers.IO) { api.docs() }
+
+    /** 打开文件时上报浏览量（失败不影响主流程） */
+    suspend fun incrementDocView(docId: String) {
+        runCatching { withContext(Dispatchers.IO) { api.incrementDocView(docId) } }
+    }
+
+    suspend fun comments(blogId: Long): ApiResult<List<Comment>> =
+        withContext(Dispatchers.IO) { api.comments(blogId) }
+
+    suspend fun postComment(
+        blogId: Long,
+        content: String,
+        nickname: String,
+        email: String,
+        avatar: String = ""
+    ): ApiResult<Comment> = withContext(Dispatchers.IO) {
+        api.postComment(
+            requestId = ApiClient.newRequestId(),
+            body = mapOf(
+                "blogId" to blogId,
+                "content" to content,
+                "nickname" to nickname,
+                "email" to email,
+                "avatar" to avatar,
+                "parentId" to -1L
+            )
+        )
+    }
+
+    /** 登录用户发表评论（对齐网页版：携带 userId，后端取本人资料，无需昵称/邮箱） */
+    suspend fun postCommentAsUser(
+        blogId: Long,
+        userId: Long,
+        content: String,
+        parentId: Long = -1L
+    ): ApiResult<Comment> = withContext(Dispatchers.IO) {
+        api.postComment(
+            requestId = ApiClient.newRequestId(),
+            body = mapOf(
+                "blogId" to blogId,
+                "content" to content,
+                "userId" to userId,
+                "parentId" to parentId
+            )
+        )
+    }
+
+    suspend fun likeBlog(blogId: Long, userId: Long, isLike: Boolean): ApiResult<Void?> =
+        withContext(Dispatchers.IO) {
+            api.likeBlog(
+                id = blogId,
+                body = mapOf(
+                    "userId" to userId,
+                    "blogId" to blogId,
+                    "isLike" to isLike
+                )
+            )
+        }
+
+    suspend fun login(username: String, password: String): ApiResult<LoginData> =
+        withContext(Dispatchers.IO) {
+            api.login(mapOf("username" to username, "password" to password))
+        }
+
+    suspend fun sendRegisterCaptcha(email: String): ApiResult<Void?> =
+        withContext(Dispatchers.IO) {
+            api.sendCaptcha(mapOf("email" to email, "scene" to "register"))
+        }
+
+    /** 登录用户完整资料（含邮箱等非公开字段，仅本人可见） */
+    suspend fun currentUser(userId: Long): ApiResult<User> =
+        withContext(Dispatchers.IO) { api.currentUser(mapOf("userId" to userId)) }
+
+    /** 更新当前登录用户资料（后端只更新非空字段：nickname/avatar 等） */
+    suspend fun updateCurrentUser(userId: Long, user: Map<String, String>): ApiResult<User> =
+        withContext(Dispatchers.IO) { api.updateCurrentUser(mapOf("userId" to userId, "user" to user)) }
+
+    /** 完整资料更新（对齐网页 UserInfoForm）：支持改邮箱带验证码，密码传 md5 摘要 */
+    suspend fun updateCurrentUserFull(userId: Long, user: Map<String, String>, captcha: String? = null): ApiResult<User> =
+        withContext(Dispatchers.IO) {
+            val body = mutableMapOf<String, Any?>("userId" to userId, "user" to user)
+            if (!captcha.isNullOrBlank()) body["captcha"] = captcha
+            api.updateCurrentUser(body)
+        }
+
+    /** 通用邮箱验证码（scene 默认 general：改邮箱/重置密码等） */
+    suspend fun sendGeneralCaptcha(email: String): ApiResult<Void?> =
+        withContext(Dispatchers.IO) { api.sendCaptcha(mapOf("email" to email)) }
+
+    /** 私信：拉取与管理员的历史记录（需 Bearer token） */
+    suspend fun adminMessages(token: String): ChatMessagesResponse =
+        withContext(Dispatchers.IO) { api.adminMessages("Bearer $token") }
+
+    /** 管理员：全部用户列表 */
+    suspend fun chatUsers(token: String): ChatUsersResponse =
+        withContext(Dispatchers.IO) { api.chatUsers("Bearer $token") }
+
+    /** 管理员：收件箱未读数 */
+    suspend fun chatUnread(token: String): ChatUnreadResponse =
+        withContext(Dispatchers.IO) { api.chatUnread("Bearer $token") }
+
+    /** 普通用户：博主（管理员）资料（私信页昵称/头像） */
+    suspend fun chatAdmin(token: String): ChatAdminResponse =
+        withContext(Dispatchers.IO) { api.chatAdmin("Bearer $token") }
+
+    /** 管理员：与指定用户的历史记录 */
+    suspend fun chatMessagesWithUser(token: String, userId: Long): ChatMessagesResponse =
+        withContext(Dispatchers.IO) { api.chatMessagesWithUser(userId, "Bearer $token") }
+
+    /** 上报 FCM 设备令牌：已登录关联用户（收私信推送），未登录为匿名（仅收热点推送） */
+    suspend fun registerDevice(deviceToken: String, platform: String = "android"): DeviceAck =
+        withContext(Dispatchers.IO) {
+            api.registerDevice(
+                TokenStore.token.value?.let { "Bearer $it" },
+                DeviceTokenBody(deviceToken, platform)
+            )
+        }
+
+    /** 移除 FCM 设备令牌（关闭通知/清除数据） */
+    suspend fun removeDevice(deviceToken: String): DeviceAck =
+        withContext(Dispatchers.IO) {
+            api.removeDevice(
+                TokenStore.token.value?.let { "Bearer $it" },
+                DeviceTokenBody(deviceToken)
+            )
+        }
+
+    /** 上报 FCM 设备令牌到博客 server（博客直接发热点推送；Token 头由拦截器注入关联用户） */
+    suspend fun registerDeviceToBlog(deviceToken: String, platform: String = "android"): DeviceAck =
+        withContext(Dispatchers.IO) { api.registerBlogDevice(DeviceTokenBody(deviceToken, platform)) }
+
+    /** 从博客 server 移除 FCM 设备令牌 */
+    suspend fun removeDeviceFromBlog(deviceToken: String): DeviceAck =
+        withContext(Dispatchers.IO) { api.removeBlogDevice(DeviceTokenBody(deviceToken)) }
+
+    suspend fun register(
+        username: String,
+        nickname: String,
+        email: String,
+        password: String,
+        avatar: String,
+        captcha: String
+    ): ApiResult<LoginData> = withContext(Dispatchers.IO) {
+        api.register(
+            mapOf(
+                "username" to username,
+                "nickname" to nickname,
+                "email" to email,
+                "password" to password,
+                "avatar" to avatar,
+                "captcha" to captcha
+            )
+        )
+    }
+}
+
+/** 随笔 */
+class EssayRepository(private val api: BlogApi = ApiClient.api) {
+
+    suspend fun essays(page: Int = 1, pageSize: Int = PAGE_SIZE): ApiResult<PageResult<Essay>> =
+        withContext(Dispatchers.IO) { api.essays(page, pageSize) }
+
+    suspend fun essay(id: Long): ApiResult<Essay> =
+        withContext(Dispatchers.IO) { api.essay(id) }
+
+    suspend fun comments(essayId: Long): ApiResult<List<EssayComment>> =
+        withContext(Dispatchers.IO) { api.essayComments(essayId) }
+
+    suspend fun likeEssay(essayId: Long, userId: Long, isLike: Boolean): ApiResult<Void?> =
+        withContext(Dispatchers.IO) {
+            api.likeEssay(
+                id = essayId,
+                body = mapOf(
+                    "userId" to userId,
+                    "essayId" to essayId,
+                    "isLike" to isLike
+                )
+            )
+        }
+
+    suspend fun postEssayComment(
+        essayId: Long,
+        userId: Long,
+        content: String,
+        parentCommentId: Long = -1L
+    ): ApiResult<EssayComment> =
+        withContext(Dispatchers.IO) {
+            api.postEssayComment(
+                id = essayId,
+                requestId = ApiClient.newRequestId(),
+                body = mapOf(
+                    "content" to content,
+                    "userId" to userId,
+                    "parentCommentId" to parentCommentId
+                )
+            )
+        }
+}
+
+/** 留言板 */
+class MessageRepository(private val api: BlogApi = ApiClient.api) {
+
+    suspend fun messages(): ApiResult<List<Message>> =
+        withContext(Dispatchers.IO) { api.messages() }
+
+    suspend fun postMessage(nickname: String, content: String, avatar: String = "", parentId: Long = -1L): ApiResult<Message> =
+        withContext(Dispatchers.IO) {
+            api.postMessage(
+                requestId = ApiClient.newRequestId(),
+                body = mapOf(
+                    "message" to mapOf(
+                        "content" to content,
+                        "nickname" to nickname,
+                        "avatar" to avatar,
+                        "parentId" to parentId
+                    )
+                )
+            )
+        }
+}
+
+/** 文件服务（admin-file 上传） */
+class FileRepository(private val api: FileApi = ApiClient.fileApi) {
+
+    suspend fun uploadAvatar(file: File): UploadAvatarResult = withContext(Dispatchers.IO) {
+        val mediaType = "image/*".toMediaType()
+        val body = file.asRequestBody(mediaType)
+        val part = MultipartBody.Part.createFormData("avatar", file.name, body)
+        api.uploadAvatar(part)
+    }
+}
+
+/** 热点聚合（洞察接口 /hot 路径，公开只读）。网络异常由 ViewModel 层 try/catch */
+class HotRepository(private val api: BlogApi = ApiClient.api) {
+
+    suspend fun overview(): ApiResult<HotOverview> =
+        withContext(Dispatchers.IO) { api.hotOverview() }
+
+    suspend fun feed(category: String?, limit: Int = 30): ApiResult<List<HotFeedItem>> =
+        withContext(Dispatchers.IO) { api.hotFeed(category, limit) }
+
+    suspend fun sources(): ApiResult<List<HotSourceStatus>> =
+        withContext(Dispatchers.IO) { api.hotSources() }
+
+    suspend fun leaderboard(modality: String, normalized: Boolean = true): ApiResult<ModelLeaderboard> =
+        withContext(Dispatchers.IO) { api.hotLeaderboard(modality, normalized) }
+
+    suspend fun benchmarks(): ApiResult<List<BenchmarkMeta>> =
+        withContext(Dispatchers.IO) { api.hotBenchmarks() }
+
+    suspend fun vendors(normalized: Boolean = true): ApiResult<List<Vendor>> =
+        withContext(Dispatchers.IO) { api.hotVendors(normalized) }
+
+    /** 模型列表：按厂商（规范名）或关键词过滤；sort = newest/name/price/context */
+    suspend fun listModels(
+        query: String?,
+        vendor: String?,
+        sort: String = "newest",
+        limit: Int = 30,
+        normalized: Boolean = true
+    ): ApiResult<List<ModelBenchmarkRow>> =
+        withContext(Dispatchers.IO) { api.hotModels(query, vendor, sort, limit, normalized) }
+
+    suspend fun compare(keys: List<String>, normalized: Boolean = true): ApiResult<ModelCompare> =
+        withContext(Dispatchers.IO) { api.hotCompare(keys, normalized) }
+
+    suspend fun leaderboardTrend(modality: String, days: Int = 30, top: Int = 5): ApiResult<LeaderboardTrend> =
+        withContext(Dispatchers.IO) { api.hotLeaderboardTrend(modality, days, top) }
+}

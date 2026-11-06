@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HanphoneJan/photo-wall-server.git",
+    "url": "git+https://github.com/StevenJan/photo-wall-server.git",
     "directory": "nodejs"
   },
-  "author": "hanphone",
+  "author": "steven",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/HanphoneJan/photo-wall-server/issues"
+    "url": "https://github.com/StevenJan/photo-wall-server/issues"
   },
-  "homepage": "https://github.com/HanphoneJan/photo-wall-server#readme",
+  "homepage": "https://github.com/StevenJan/photo-wall-server#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",

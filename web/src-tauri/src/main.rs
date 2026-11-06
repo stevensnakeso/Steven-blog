@@ -11,7 +11,7 @@ fn main() {
     {
         if let Ok(local_app_data) = std::env::var("LOCALAPPDATA") {
             let webview_data = std::path::Path::new(&local_app_data)
-                .join("cn.hanphone.blog")
+                .join("cn.steven.blog")
                 .join("EBWebView");
             if webview_data.exists() {
                 let _ = std::fs::remove_dir_all(&webview_data);
@@ -19,5 +19,5 @@ fn main() {
         }
     }
 
-    hanphone_blog_lib::run()
+    steven_blog_lib::run()
 }

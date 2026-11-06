@@ -27,14 +27,14 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
   // 子项目：照片墙（不定期更新照片）
   { url: `${SITE_URL}/atlas`, priority: 0.5, changeFrequency: 'monthly' },
 
-  // ===== 工具集合 (hanphone-tool) =====
+  // ===== 工具集合 (steven-tool) =====
   { url: `${SITE_URL}/tools`, priority: 0.6, changeFrequency: 'yearly' },
   { url: `${SITE_URL}/tools/calculator`, priority: 0.5, changeFrequency: 'yearly' },
   { url: `${SITE_URL}/tools/markdown-converter`, priority: 0.5, changeFrequency: 'yearly' },
   { url: `${SITE_URL}/tools/photo-compressor`, priority: 0.5, changeFrequency: 'yearly' },
   { url: `${SITE_URL}/tools/rgb-color-picker`, priority: 0.5, changeFrequency: 'yearly' },
 
-  // ===== 有趣网页 (hanphone-play) =====
+  // ===== 有趣网页 (steven-play) =====
   { url: `${SITE_URL}/play`, priority: 0.6, changeFrequency: 'yearly' },
   { url: `${SITE_URL}/play/congratulation`, priority: 0.5, changeFrequency: 'yearly' },
   { url: `${SITE_URL}/play/letter/web/envelope.html`, priority: 0.5, changeFrequency: 'yearly' },
@@ -43,7 +43,7 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
   { url: `${SITE_URL}/play/simple-piano`, priority: 0.5, changeFrequency: 'yearly' },
   { url: `${SITE_URL}/play/visual-player`, priority: 0.5, changeFrequency: 'yearly' },
 
-  // ===== 小游戏 (hanphone-game) =====
+  // ===== 小游戏 (steven-game) =====
   { url: `${SITE_URL}/games`, priority: 0.6, changeFrequency: 'yearly' },
   { url: `${SITE_URL}/games/2048`, priority: 0.5, changeFrequency: 'yearly' },
   { url: `${SITE_URL}/games/blackblocks`, priority: 0.5, changeFrequency: 'yearly' },

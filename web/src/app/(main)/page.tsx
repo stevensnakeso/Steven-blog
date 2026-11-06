@@ -40,7 +40,7 @@ export const revalidate = 300
 // 生成元数据
 export const metadata = createMetadata(
   '首页',
-  '寒枫的个人博客 | Hanphone\'s Blog | 分享Agent开发、前端开发、全栈开发、机器学习等技术文章，记录项目经验、生活经历，探究AI应用，探索自我发展。',
+  '寒枫的个人博客 | Steven\'s Blog | 分享Agent开发、前端开发、全栈开发、机器学习等技术文章，记录项目经验、生活经历，探究AI应用，探索自我发展。',
   { path: '/' }
 )
 

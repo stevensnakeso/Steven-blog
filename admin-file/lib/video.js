@@ -72,7 +72,7 @@ const CONFIG = {
   audioBitrate: process.env.VIDEO_HLS_AUDIO_BITRATE || "128k",
 };
 
-const PUBLIC_BASE = (process.env.PUBLIC_FILE_BASE_URL || "https://hanphone.top").replace(/\/+$/, "");
+const PUBLIC_BASE = (process.env.PUBLIC_FILE_BASE_URL || "https://steven.top").replace(/\/+$/, "");
 
 let ffmpegOk = false;
 let ffprobeOk = false;

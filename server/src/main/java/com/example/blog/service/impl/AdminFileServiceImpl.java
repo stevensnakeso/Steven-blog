@@ -39,7 +39,7 @@ public class AdminFileServiceImpl implements AdminFileService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${file.service.base-url:https://hanphone.top}")
+    @Value("${file.service.base-url:https://steven.top}")
     private String fileServiceBaseUrl;
 
     @Value("${internal.api.key:}")

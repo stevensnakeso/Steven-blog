@@ -1,4 +1,4 @@
-# Hanphone's Blog - 前端
+# Steven's Blog - 前端
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.x-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-18.x-61DAFB?style=flat-square&logo=react)](https://react.dev/)
@@ -32,8 +32,8 @@ pnpm dev
 | 变量 | 说明 | 示例 |
 |------|------|------|
 | `NEXT_PUBLIC_API_BASE_URL` | 后端 API 地址 | `http://localhost:8090` |
-| `NEXT_PUBLIC_FILE_DOMAIN` | 文件服务域名 | `hanphone.top` |
-| `NEXT_PUBLIC_SITE_URL` | 站点主域名 | `https://hanphone.cn` |
+| `NEXT_PUBLIC_FILE_DOMAIN` | 文件服务域名 | `steven.top` |
+| `NEXT_PUBLIC_SITE_URL` | 站点主域名 | `https://steven.cn` |
 
 ---
 

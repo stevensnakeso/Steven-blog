@@ -57,7 +57,7 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         // CORS 白名单：通过环境变量 CORS_ALLOWED_ORIGINS 配置，多个域名用逗号分隔
-        // 例如: CORS_ALLOWED_ORIGINS=https://hanphone.cn,https://www.hanphone.cn,http://localhost:*,tauri://localhost
+        // 例如: CORS_ALLOWED_ORIGINS=https://steven.cn,https://www.steven.cn,http://localhost:*,tauri://localhost
         // http://localhost:* 匹配 Tauri 桌面应用的随机端口（dangerousUseHttpScheme 模式）
         // tauri://localhost 匹配 Tauri 默认 scheme
         String allowedOrigins = System.getProperty("CORS_ALLOWED_ORIGINS");

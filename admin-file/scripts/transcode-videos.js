@@ -6,8 +6,8 @@
  *   master.m3u8 / v0,v1 分片 / poster.jpg / meta.json
  *
  * 用法（部署机 ~/server_file 下）：
- *   node scripts/transcode-videos.js --env /home/hanphone/server_file/.env --dry-run
- *   node scripts/transcode-videos.js --env /home/hanphone/server_file/.env
+ *   node scripts/transcode-videos.js --env /home/steven/server_file/.env --dry-run
+ *   node scripts/transcode-videos.js --env /home/steven/server_file/.env
  *   node scripts/transcode-videos.js --path blog/essay/foo.mp4 --force
  *
  * 参数：

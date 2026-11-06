@@ -2,8 +2,8 @@
  * 媒体地址工具
  *
  * admin-file 的原片 URL 有两种历史形态：
- *   https://hanphone.top/blog/essay/foo.png
- *   https://hanphone.top/blog%2Fessay/foo.png   （旧数据，整段斜杠编码）
+ *   https://steven.top/blog/essay/foo.png
+ *   https://steven.top/blog%2Fessay/foo.png   （旧数据，整段斜杠编码）
  *
  * 派生资源统一走 /media/*（状态/封面/缩略图）与 /hls/*（视频分片），并且只对本站文件生效；外链原样返回。
  */

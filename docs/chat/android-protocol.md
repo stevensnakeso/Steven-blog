@@ -7,7 +7,7 @@
 
 | 项 | 值 | 说明 |
 |----|-----|------|
-| URL | `https://hanphone.cn` | |
+| URL | `https://steven.cn` | |
 | path | `/chat-api/socket.io` | |
 | 认证 | 连接成功后 emit `authenticate`（**裸 token**，不带 Bearer 前缀） | 服务端 10s 内未认证成功会断开（`authTimeout`） |
 | 心跳 | 认证成功后每 **25s** emit `heartbeat` | 服务端 60s 无心跳强制断连（`HEARTBEAT_TIMEOUT_MS`）；Web 端同为 25s |

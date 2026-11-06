@@ -13,7 +13,7 @@ const loadDOMPurify = async () => {
 }
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8090/api'
-const FILE_BASE_URL = process.env.NEXT_PUBLIC_PICTURE_BASE_URL || 'https://hanphone.top'
+const FILE_BASE_URL = process.env.NEXT_PUBLIC_PICTURE_BASE_URL || 'https://steven.top'
 
 const SUPPORTED_EXTENSIONS = new Set(['.docx', '.pdf', '.md', '.html'])
 

@@ -1,5 +1,5 @@
 -- ============================================================
--- hanphone-chat 数据库结构（chat_db，PostgreSQL）
+-- steven-chat 数据库结构（chat_db，PostgreSQL）
 -- ⚠️ 本文件是 chat_db schema 的唯一事实来源：改表结构后必须同步更新本文件。
 -- 新建库：psql -h 127.0.0.1 -U chat_db -d chat_db -f init.sql
 -- 幂等：可重复执行，不会破坏已存在的数据。

@@ -43,17 +43,17 @@ class ProjectServiceImplTest {
 
     @Test
     void deleteProject_syncDeleteImageTrue_reclaimsPhysicalFile() {
-        when(projectRepository.findById(9L)).thenReturn(Optional.of(projectWithPic("https://hanphone.top/blog%2Fproject%2Fdemo.jpeg")));
+        when(projectRepository.findById(9L)).thenReturn(Optional.of(projectWithPic("https://steven.top/blog%2Fproject%2Fdemo.jpeg")));
 
         service.deleteProject(9L, true);
 
         verify(projectRepository).deleteById(9L);
-        verify(adminFileService).deleteManagedFiles(List.of("https://hanphone.top/blog%2Fproject%2Fdemo.jpeg"));
+        verify(adminFileService).deleteManagedFiles(List.of("https://steven.top/blog%2Fproject%2Fdemo.jpeg"));
     }
 
     @Test
     void deleteProject_syncDeleteImageFalse_onlyDeletesRecord() {
-        when(projectRepository.findById(9L)).thenReturn(Optional.of(projectWithPic("https://hanphone.top/blog%2Fproject%2Fdemo.jpeg")));
+        when(projectRepository.findById(9L)).thenReturn(Optional.of(projectWithPic("https://steven.top/blog%2Fproject%2Fdemo.jpeg")));
 
         service.deleteProject(9L, false);
 

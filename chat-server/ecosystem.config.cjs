@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "hanphone-chat-server",
+      name: "steven-chat-server",
       cwd: __dirname,
       script: "./dist/server.js",
       node_args: "--import=dotenv/config",

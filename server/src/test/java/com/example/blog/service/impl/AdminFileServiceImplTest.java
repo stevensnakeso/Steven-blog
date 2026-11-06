@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 class AdminFileServiceImplTest {
 
-    private static final String BASE_URL = "https://hanphone.top";
+    private static final String BASE_URL = "https://steven.top";
 
     private RestTemplate restTemplate;
     private AdminFileService service;
@@ -51,7 +51,7 @@ class AdminFileServiceImplTest {
     @Test
     void isManagedFileUrl_rejectsExternalAndRootPaths() {
         assertFalse(service.isManagedFileUrl("https://example.com/blog/project/demo.jpeg"));
-        assertFalse(service.isManagedFileUrl("https://hanphone.top/images/zhuxun.jpg"));
+        assertFalse(service.isManagedFileUrl("https://steven.top/images/zhuxun.jpg"));
         // blog 根目录本身不是文件，不允许被当成可删目标
         assertFalse(service.isManagedFileUrl(BASE_URL + "/blog"));
         assertFalse(service.isManagedFileUrl(BASE_URL + "/blog/"));

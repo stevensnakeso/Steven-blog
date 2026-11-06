@@ -31,7 +31,7 @@ src-tauri/
 │       ├── build.gradle.kts
 │       ├── gradle.properties
 │       ├── settings.gradle
-│       └── hanphone-blog.keystore   # Release 签名密钥库
+│       └── steven-blog.keystore   # Release 签名密钥库
 └── target/                 # Rust 编译输出（自动创建）
 ```
 
@@ -41,8 +41,8 @@ src-tauri/
 
 | 字段 | 值 | 说明 |
 |------|-----|------|
-| `productName` | `hanphone` | 应用名称 |
-| `identifier` | `cn.hanphone.blog` | 包名（Android 使用） |
+| `productName` | `steven` | 应用名称 |
+| `identifier` | `cn.steven.blog` | 包名（Android 使用） |
 | `build.frontendDist` | `../dist` | Next.js 静态导出目录 |
 | `build.beforeBuildCommand` | `pnpm build:tauri` | 构建前执行脚本 |
 | `bundle.targets` | `msi, nsis, deb, rpm, appimage, app` | 桌面安装包格式 |
@@ -127,9 +127,9 @@ Release 输出：
 - `gradle.properties`：配置 `RELEASE_STORE_FILE`、`RELEASE_STORE_PASSWORD`、`RELEASE_KEY_ALIAS`、`RELEASE_KEY_PASSWORD`
 - `app/build.gradle.kts`：配置 `signingConfigs.create("release")` + `buildTypes.release.signingConfig`
 
-当前密钥库：`gen/android/hanphone-blog.keystore`
-- 别名：`hanphone`
-- 密码：`hanphone123`
+当前密钥库：`gen/android/steven-blog.keystore`
+- 别名：`steven`
+- 密码：`steven123`
 
 ## 关键技术细节
 
@@ -200,7 +200,7 @@ Windows 桌面端使用 `embedBootstrapper` 模式，将 WebView2 安装器嵌�
 ## 注意事项
 
 1. **构建时不要修改源码**：`build-tauri.mjs` 会自动 patch 和恢复，手动修改可能导致冲突。
-2. **Keystore 安全**：`hanphone-blog.keystore` 包含私钥，**不要提交到 Git**（已在 `.gitignore` 中）。
+2. **Keystore 安全**：`steven-blog.keystore` 包含私钥，**不要提交到 Git**（已在 `.gitignore` 中）。
 3. **Android NDK 版本**：必须使用 25.x，30+ 不兼容 Tauri 2。
 4. **静态导出限制**：`next.config.js` 中的 `rewrites`、`redirects`、`headers` 在静态导出时不生效，Tauri 应用无法使用这些特性。
 5. **开发模式 DevTools**：`lib.rs` 中开发模式自动打开 DevTools，方便调试前端代码。

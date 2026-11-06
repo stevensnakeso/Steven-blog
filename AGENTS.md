@@ -4,7 +4,7 @@ This file provides guidance to AI coding agents when working with code in this r
 
 ## Project Overview
 
-个人博客系统 (Hanphone's Blog / 云林有风)，前后端分离架构，pnpm workspace monorepo。
+个人博客系统 (Steven's Blog / 云林有风)，前后端分离架构，pnpm workspace monorepo。
 
 ## Key Commands
 
@@ -26,9 +26,9 @@ cd server && mvn clean package -DskipTests  # Build JAR
 
 # === Sub-apps ===
 pnpm build:gomoku                  # Build gomoku game (Uni-app → web/public/games/gomoku/)
-pnpm build:photo-wall              # Build photo wall (Vite → apps/photo-wall/atlas/；生产由 nginx alias /home/hanphone/html/atlas 托管)
+pnpm build:photo-wall              # Build photo wall (Vite → apps/photo-wall/atlas/；生产由 nginx alias /home/steven/html/atlas 托管)
 pnpm build:chat                    # Build chat client (React → apps/chat-client/dist；nginx /chat/ 托管)
-pnpm --filter chat-server dev      # Chat server (port 4010，/chat-api；生产 pm2 hanphone-chat-server)
+pnpm --filter chat-server dev      # Chat server (port 4010，/chat-api；生产 pm2 steven-chat-server)
 
 # === File services ===
 pnpm --filter admin-file start     # Express file service (port 4000)
@@ -44,7 +44,7 @@ cd server && python3 test.py       # 39 security test cases；注册/找回密�
 
 | Package               | Directory              | Stack                                                   |
 | --------------------- | ---------------------- | ------------------------------------------------------- |
-| `hanphone-blog-web`     | `web/`               | Next.js 15 + React 18 + TypeScript + Tailwind CSS 4     |
+| `steven-blog-web`     | `web/`               | Next.js 15 + React 18 + TypeScript + Tailwind CSS 4     |
 | `blog`              | `server/`            | Spring Boot 3.2.12 + Java 17 + JPA + MyBatis-Plus 3.5.9 |
 | `admin-file`        | `admin-file/`        | Express.js 5 + Multer (file storage)                    |
 | `photo-wall-server` | `photo-wall-server/` | Express.js 5 + PostgreSQL                               |
@@ -56,11 +56,11 @@ cd server && python3 test.py       # 39 security test cases；注册/找回密�
 
 ### Data Flow
 
-- Next.js frontend calls Spring Boot REST API at `NEXT_PUBLIC_API_BASE_URL` (default `https://hanphone.cn/api`)
+- Next.js frontend calls Spring Boot REST API at `NEXT_PUBLIC_API_BASE_URL` (default `https://steven.cn/api`)
 - **改数据库 ≠ 页面更新**：博客详情页 `app/(main)/blog/[id]/page.tsx` 用 `generateStaticParams` + 服务端 `fetch` **在构建期把正文写进静态页面**，没有 ISR、没有 `revalidate`。所以通过 MCP 改了正文之后，线上页面会一直是旧的（连阅读量都不会涨 —— 那个页面根本不回 API），必须重新构建并部署 `~/client_blog` 才生效。写内容时看不到变化，先想到这里，不是 MCP 坏了。
 - **重建前必须删 `web/.next/cache`**：Next 的 `fetch` 默认 `force-cache`，响应存在 `.next/cache/fetch-cache` 里跨构建复用。只跑 `next build` 会把上一次构建拿到的旧正文再塞进产物（这次实测：正文更新后重建，56 个文件里一个 `持续更新版` 都没有，删掉缓存重建才出现）。部署只上传 `.next` 是对的，但**构建前**要清。
 - 同理：`output: 'export'` 与 `pm2` 里的 `next start` 是两套口径，改配置前先确认线上到底是哪种产物。
-- File uploads go to `admin-file` Express service on separate domain (`hanphone.top`)
+- File uploads go to `admin-file` Express service on separate domain (`steven.top`)
 - Photo wall has its own Express backend (`photo-wall-server`) on port 4001
 - Backend uses PostgreSQL (primary DB) + Redis (rate limiting, sessions, captcha); hot public reads (tags/types/site-stats) cached in-process via Caffeine (TTL 300s, evicted on writes)
 - JWT-based auth: TokenInterceptor validates tokens on admin endpoints (`/admin/**`); public endpoints use IndexController/UserController etc.
@@ -69,7 +69,7 @@ cd server && python3 test.py       # 39 security test cases；注册/找回密�
 
 - **App Router**: Pages in `app/(main)/` (public) and `app/admin/` (dashboard)
 - **热点聚合页** `/insight`（「分享」菜单 → 热点聚合）：GitHub / HF / AI 要闻 热点流 + 模型榜单（文本 / 代码 / Agent / Embedding / 生图 / 生视频 / 语音）+ 综合对比（能力雷达 / 价格散点 / 明细表，可导出图片与分享链接）。页面为 `force-dynamic` 按请求渲染，服务端经内网 `API_INTERNAL_BASE_URL` 取数；后台 `/admin/insight`（导航「聚合数据」）可异步触发采集并配置 AI 摘要（URL/Key/Model/自定义 Header）。
-- **Static sub-apps**: Gomoku builds to `web/public/games/` and is served by Next.js rewrites at `/games/`. Photo wall (`apps/photo-wall`) builds to its own `atlas/` and is served **by nginx alias** `/home/hanphone/html/atlas` at `/atlas/` (不在 Next.js / `web/public/` 内托管)
+- **Static sub-apps**: Gomoku builds to `web/public/games/` and is served by Next.js rewrites at `/games/`. Photo wall (`apps/photo-wall`) builds to its own `atlas/` and is served **by nginx alias** `/home/steven/html/atlas` at `/atlas/` (不在 Next.js / `web/public/` 内托管)
 - **PWA**: Serwist v9 service worker (`app/sw.ts`) with offline page
 - **Desktop**: Tauri 2 wrapper in `src-tauri/` packages as Windows desktop app
 - **Themes**: 4 themes (light, dark, macaron, cyberpunk) via CSS custom properties + Tailwind variants; theme persisted in cookie set by middleware
@@ -88,7 +88,7 @@ cd server && python3 test.py       # 39 security test cases；注册/找回密�
 
 - Frontend env: copy `web/env.example` → `web/.env.local`
 - Backend env: copy `server/env.example` → `server/.env`
-- Internal service auth: `INTERNAL_API_KEY` in backend `.env` for service-to-service calls (e.g., hanphone-chat → blog API)
+- Internal service auth: `INTERNAL_API_KEY` in backend `.env` for service-to-service calls (e.g., steven-chat → blog API)
 - FCM 推送（Android 杀进程兜底）：**热点更新由博客 server 直接发送**——`FcmPushService` 自实现 FCM v1 REST（HTTP/1.1 + `FCM_PROXY`，如 mihomo `http://127.0.0.1:7890`；`firebase-admin` messaging 走 HTTP/2 直连、不支持代理，国内服务器必走代理否则 ETIMEDOUT）。热点采集完成后 blog 向 `device_token` 表全部设备广播（`data.type=hot`，通知渠道 `hot_updates`）；设备经 `POST /api/devices` 上报（`token` 头关联用户 / 匿名仅收热点），凭证 `FCM_SERVICE_ACCOUNT`。**过渡兜底**：博客尚无设备 token（App 未升级到上报博客的版本）时经 `CHAT_API_BASE_URL`（默认 `http://127.0.0.1:4010`）调 chat-server `/chat-api/internal/push` 广播（`x-internal-key` = chat↔blog 共享密钥，即 chat-server 的 `BLOG_INTERNAL_KEY` == blog 的 `INTERNAL_API_KEY`；用 `HOT_PUSH_CHAT_FALLBACK=false` 可关）。私信推送仍由 chat-server 发送（同样 `FCM_SERVICE_ACCOUNT`/`FCM_PROXY`），**仅当接收方无在线 socket 时**才推（在线走 socket 通知，天然去重，`data.type=private`），设备上报端点 `POST /chat-api/api/devices`；需放置 `android/app/google-services.json`，**缺失时 FCM 自动禁用、构建仍成功**。
 - Visitor IP geo stats: `GEO_DB_PATH` in backend `.env` points to a **DB-IP City Lite** mmdb file (globally covers IP→country/region; missing file degrades to "unknown region"). Auto-update monthly via `server/scripts/update-dbip.sh` (see `server/DEPLOYMENT.md` §7). Frontend world map displays country names in Chinese via `web/src/lib/countryZh.ts` mapping.
 - 热点聚合：`GITHUB_TOKEN`（GitHub 配额）、`AA_API_KEY`（Artificial Analysis 免费 key）、`HF_ENDPOINT`（国内可设 `https://hf-mirror.com`）、`HOT_LMARENA_ENABLED`、`HOT_PROXY`（服务器侧代理，如 `http://127.0.0.1:7890`；**仅 LMArena 走它**，因为 `datasets-server.huggingface.co` 国内直连不可达——服务器跑 mihomo 见 server/DEPLOYMENT.md §8）、`HOT_COLLECT_ENABLED` / `HOT_COLLECT_CRON`；AI 摘要可用 `HOT_SUMMARY_*` 或在后台「聚合数据」配置 URL/Key/Model/自定义 Header（**注意**：opencode zen 分两个入口——Console 按量付费 `https://opencode.ai/inference/openai/v1`（旧别名 `/zen/v1`），Go 订阅 `https://opencode.ai/inference/go/openai/v1`（旧别名 `/zen/go/v1`，须带 `x-opencode-session`）；**把 Go 的 Key 配到 Console 入口会报 402 `Insufficient account funds`**，看起来像没额度，实际是入口用错；推理模型 `max_tokens` 要给足否则空摘要）。前端服务端取内网后端用 `API_INTERNAL_BASE_URL`（**直连 8090，无 `/api` 前缀**，nginx 才加 `/api`）。榜单口径/归一/采集器的坑见 server/TECHNICAL_DOCUMENT.md「热点聚合」→「经验与坑」。
@@ -107,4 +107,4 @@ Three jobs on push/PR to main: server tests (Maven), web unit tests (Vitest), bu
 - [部署指南](server/DEPLOYMENT.md)（Systemd / Docker）
 - [Swagger 使用说明](server/SWAGGER_USAGE.md)
 - [Android 客户端 AI 交接文档](android/HANDOVER.md)（架构/接口坑/设计规范/踩坑记录/开发规矩 —— 接手 Android 开发必读）
-- [聊天协议/部署文档](docs/chat/)（`android-protocol.md` ← App 对接 hanphone-chat 的协议"唯一事实来源"；`DEPLOYMENT.md` 生产部署；`technical/` 设计文档）
+- [聊天协议/部署文档](docs/chat/)（`android-protocol.md` ← App 对接 steven-chat 的协议"唯一事实来源"；`DEPLOYMENT.md` 生产部署；`technical/` 设计文档）

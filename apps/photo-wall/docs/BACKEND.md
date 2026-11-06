@@ -503,7 +503,7 @@ volumes:
 ```nginx
 server {
     listen 80;
-    server_name hanphone.cn;
+    server_name steven.cn;
     
     location / {
         proxy_pass http://localhost:4001;

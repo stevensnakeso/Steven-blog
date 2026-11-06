@@ -10,11 +10,11 @@ if (!defined('INTERNAL_PATH')) {
 }
 
 if (!defined('EXTERN_PATH')) {
-    define('EXTERN_PATH', envValue('EXTERN_PATH', 'https://hanphone.top/storage/atlas'));
+    define('EXTERN_PATH', envValue('EXTERN_PATH', 'https://steven.top/storage/atlas'));
 }
 
 if (!defined('JWT_ISSUER')) {
-    define('JWT_ISSUER', envValue('JWT_ISSUER', 'Hanphone'));
+    define('JWT_ISSUER', envValue('JWT_ISSUER', 'Steven'));
 }
 
 if (!defined('JWT_AUDIENCE')) {

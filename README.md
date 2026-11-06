@@ -1,19 +1,19 @@
-# 🌟 Hanphone's Blog
+# 🌟 Steven's Blog
 
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.12-brightgreen.svg)](server/)
 [![Next.js](https://img.shields.io/badge/Next.js-15.x-black.svg)](web/)
-[![CI](https://github.com/HanphoneJan/hanphone-blog/actions/workflows/ci.yml/badge.svg)](https://github.com/HanphoneJan/hanphone-blog/actions)
+[![CI](https://github.com/StevenJan/steven-blog/actions/workflows/ci.yml/badge.svg)](https://github.com/StevenJan/steven-blog/actions)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 个人博客系统，采用前后端分离架构：Next.js + Spring Boot。
 
 博客内还集成了多个纯前端子项目（工具集合、有趣网页、小游戏、照片墙），以及一个「热点聚合」页（GitHub / Hugging Face / AI 要闻热点 + 主流模型榜单 + 模型综合对比），部署在同一域名下。
 
-[工具](https://hanphone.cn/tools) · [有趣网页](https://hanphone.cn/play) · [小游戏](https://hanphone.cn/games) · [照片墙](https://hanphone.cn/atlas/) · [热点聚合](https://hanphone.cn/insight/)
+[工具](https://steven.cn/tools) · [有趣网页](https://steven.cn/play) · [小游戏](https://steven.cn/games) · [照片墙](https://steven.cn/atlas/) · [热点聚合](https://steven.cn/insight/)
 
 采用 **pnpm workspace** 管理多包（Monorepo）：web 前端 + apps（gomoku / photo-wall / chat-client）+ admin-file 文件服务 + photo-wall-server + chat-server 聊天服务 + mcp-server；Android 原生客户端为独立 Gradle 工程（`android/`）。
 
-[在线演示](https://hanphone.cn) · [快速开始](#快速开始) · [文档索引](#文档) · [测试指南](#测试)
+[在线演示](https://steven.cn) · [快速开始](#快速开始) · [文档索引](#文档) · [测试指南](#测试)
 
 ---
 
@@ -187,7 +187,7 @@ pnpm build:chat
 ## 项目结构
 
 ```
-hanphone-blog/
+steven-blog/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml          # CI 配置
@@ -205,8 +205,8 @@ hanphone-blog/
 ├── web/                    # 前端主站 (Next.js 15)
 │   ├── e2e/                # Playwright E2E 测试
 │   ├── public/             # 静态资源
-│   │   ├── tools/          # 工具集合 (hanphone-tool)
-│   │   ├── play/           # 有趣网页 (hanphone-play)
+│   │   ├── tools/          # 工具集合 (steven-tool)
+│   │   ├── play/           # 有趣网页 (steven-play)
 │   │   ├── games/          # 小游戏构建产物 (Git 忽略)
 │   │   ├── atlas/          # 照片墙构建产物 (Git 忽略)
 │   │   └── shared/         # 共享资源
@@ -237,10 +237,10 @@ hanphone-blog/
 
 ## Star History
 
-<a href="https://www.star-history.com/?repos=HanphoneJan%2Fhanphone-blog&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=StevenJan%2Fsteven-blog&type=date&legend=top-left">
  <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=HanphoneJan/hanphone-blog&type=date&theme=dark&legend=top-left" />
-  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=HanphoneJan/hanphone-blog&type=date&legend=top-left" />
-  <img alt="Star History Chart" src="https://api.star-history.com/image?repos=HanphoneJan/hanphone-blog&type=date&legend=top-left" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=StevenJan/steven-blog&type=date&theme=dark&legend=top-left" />
+  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=StevenJan/steven-blog&type=date&legend=top-left" />
+  <img alt="Star History Chart" src="https://api.star-history.com/image?repos=StevenJan/steven-blog&type=date&legend=top-left" />
  </picture>
 </a>

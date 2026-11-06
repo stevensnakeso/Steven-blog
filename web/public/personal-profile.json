@@ -1,7 +1,7 @@
 {
   "profile": {
     "name": "寒枫",
-    "avatar": "https://hanphone.top/images/zhuxun.jpg",
+    "avatar": "https://steven.top/images/zhuxun.jpg",
     "description": "一个焦虑于找工作的大学生",
     "techDirection": "Agent应用、全栈开发",
     "signature": "不鹜于虚声"
@@ -14,7 +14,7 @@
     },
     {
       "platform": "github",
-      "url": "https://github.com/HanphoneJan/",
+      "url": "https://github.com/StevenJan/",
       "label": "GitHub"
     },
     {
@@ -24,18 +24,18 @@
     },
     {
       "platform": "x",
-      "url": "https://x.com/hanphonejan",
+      "url": "https://x.com/stevenjan",
       "label": "X"
     },
     {
       "platform": "youtube",
-      "url": "https://youtube.com/@HanphoneJan",
+      "url": "https://youtube.com/@StevenJan",
       "label": "YouTube"
     }
   ],
   "externalLinks": {
     "docs": {
-      "href": "https://docs.hanphone.cn/",
+      "href": "https://docs.steven.cn/",
       "text": "技术文档站"
     }
   },

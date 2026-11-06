@@ -11,7 +11,7 @@ const client = new BlogApiClient(config);
 
 function createMcpServer(): McpServer {
   const server = new McpServer({
-    name: 'hanphone-blog-mcp',
+    name: 'steven-blog-mcp',
     version: '0.2.0',
   });
   registerAllTools(server, client);
@@ -93,7 +93,7 @@ app.use(express.json({ limit: '10mb' }));
 app.get('/health', (_req: Request, res: Response) => {
   res.json({
     status: 'ok',
-    name: 'hanphone-blog-mcp',
+    name: 'steven-blog-mcp',
     version: '0.2.0',
     blogApi: config.baseUrl,
     internalKeyConfigured: Boolean(config.internalApiKey),
@@ -125,7 +125,7 @@ app.get('/mcp', methodNotAllowed);
 app.delete('/mcp', methodNotAllowed);
 
 app.listen(config.port, () => {
-  console.log(`hanphone-blog-mcp 已启动`);
+  console.log(`steven-blog-mcp 已启动`);
   console.log(`  MCP 端点:    http://127.0.0.1:${config.port}/mcp （Bearer MCP API Key）`);
   console.log(`  健康检查:    http://127.0.0.1:${config.port}/health`);
   console.log(`  博客 API:    ${config.baseUrl}`);

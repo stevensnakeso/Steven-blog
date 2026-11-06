@@ -52,7 +52,7 @@ const routes = [
     component: Atlas,  //  满足语法规则，但不会被渲染
     // 外部重定向，直接跳转到指定 URL
     beforeEnter: () => {
-      window.location.href = 'https://hanphone.cn';
+      window.location.href = 'https://steven.cn';
     },
   },
   {

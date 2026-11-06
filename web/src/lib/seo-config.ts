@@ -12,7 +12,7 @@ export const SITE_CONFIG = {
   // 网站基础信息
   name: '云林有风',
   shortName: '云林有风',
-  description: '寒枫的个人博客 | Hanphone\'s Blog | 分享Agent开发、前端开发、全栈开发、机器学习等技术文章，记录项目经验、生活经历，探究AI应用，探索自我发展。',
+  description: '寒枫的个人博客 | Steven\'s Blog | 分享Agent开发、前端开发、全栈开发、机器学习等技术文章，记录项目经验、生活经历，探究AI应用，探索自我发展。',
 
   // 域名配置
   url: siteUrl,
@@ -20,14 +20,14 @@ export const SITE_CONFIG = {
   // 作者信息
   author: {
     name: '寒枫',
-    alternateName: 'Hanphone',
+    alternateName: 'Steven',
     email: 'janhizian@qq.com',
   },
 
   // 社交媒体链接
   social: {
-    github: 'https://github.com/hanphonejan',
-    twitter: '@hanphone',
+    github: 'https://github.com/stevenjan',
+    twitter: '@steven',
     bilibili: ''
   },
 
@@ -46,7 +46,7 @@ export const SITE_CONFIG = {
   keywords: [
     '寒枫',
     '云林有风',
-    'Hanphone',
+    'Steven',
     '个人博客',
     '技术博客',
     '前端开发',

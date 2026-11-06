@@ -2,19 +2,19 @@
 
 > 用途：供**新接手 AI** 快速理解项目、规避前人踩过的坑。
 > 位置：`android/`。配套文件：`README.md`（构建）、本文件（经验与规矩）。
-> 铁律：**改动前先读 `web/`（网站前端）与 `docs/chat/`（聊天协议，原 hanphone-chat 已并入本仓库）作为接口与交互的"唯一事实来源"，不要凭直觉假设。**
+> 铁律：**改动前先读 `web/`（网站前端）与 `docs/chat/`（聊天协议，原 steven-chat 已并入本仓库）作为接口与交互的"唯一事实来源"，不要凭直觉假设。**
 
 ---
 
 ## 1. 项目定位
 
-博客「云林有风」的 Android 原生客户端。Kotlin + Jetpack Compose (Material 3)，对接博客 REST API 与 hanphone-chat 实时聊天。后端代码零改动。
+博客「云林有风」的 Android 原生客户端。Kotlin + Jetpack Compose (Material 3)，对接博客 REST API 与 steven-chat 实时聊天。后端代码零改动。
 
 - 导航：**底部 4 Tab**：首页 / 随笔 / 消息 / 我的
 - 子页：文章详情、随笔详情、搜索、留言板、友链、设置（设置→外观/数据管理 为二级子页）、登录、注册
 - 聊天：原生 Socket.IO（**非 WebView**），复用博客 JWT
 
-## 2. 代码地图（`app/src/main/java/com/hanphone/blog/`）
+## 2. 代码地图（`app/src/main/java/com/steven/blog/`）
 
 ```
 MainActivity.kt         入口（enableEdgeToEdge + BlogAppRoot）
@@ -23,7 +23,7 @@ core/Settings.kt        DataStore：主题模式/自定义背景/访客身份/�
 data/
   AppGraph.kt           ServiceLocator：进程级 Repository 单例（VM 层使用）
   auth/TokenStore.kt    进程内登录态：token/userId/nickname/avatar/userType
-  api/ApiClient.kt      Retrofit×2：api(hanphone.cn/api, 注入 Token 头) + fileApi(hanphone.top)
+  api/ApiClient.kt      Retrofit×2：api(steven.cn/api, 注入 Token 头) + fileApi(steven.top)
   api/BlogApi.kt        全部 REST（含聊天 REST 绝对路径 + Bearer + limit 参数）
   api/FileApi.kt        上传 /upload/avatar
   cache/MemoryCache.kt  内存缓存：返回秒显（进程存活期）
@@ -50,7 +50,7 @@ ui/
   docs/DocMarkdownScreen.kt                     文库 MD 预览（拉文件服务原文 → Markdown 渲染）
   webview/WebViewScreen.kt      通用 WebView（项目链接 loadUrl / 文库 HTML 文档 fetch+loadDataWithBaseURL；
                                进度条/返回/浏览器外开；主框架加载失败显示「重试/在浏览器打开」错误层）
-  core/AuthBridge.kt            第一方 WebView 页（照片墙 hanphone.cn/atlas）登录态注入 + 登出清理
+  core/AuthBridge.kt            第一方 WebView 页（照片墙 steven.cn/atlas）登录态注入 + 登出清理
   profile/ProfileScreen.kt + ProfileViewModel.kt
   components/           ArticleCard/Avatar/Skeleton(骨架屏)/Loading/Error/Empty/BottomActionItem
                       SearchField（40dp 紧凑搜索胶囊，替代 M3 OutlinedTextField 56dp）/详情底部栏=细分割线+单行图标文字
@@ -68,7 +68,7 @@ ui/
 ## 3. 后端接口与「坑」（务必牢记）
 
 ### 3.1 通用
-- 生产 API：`https://hanphone.cn/api/`（nginx 剥掉 `/api` 前缀）
+- 生产 API：`https://steven.cn/api/`（nginx 剥掉 `/api` 前缀）
 - 所有接口返回 `Result<T>`：`{ flag, code, message, data }`
 - 写接口（评论/留言/友链申请）为幂等：需带 `X-Request-Id` 头（`ApiClient.newRequestId()`）
 
@@ -92,10 +92,10 @@ ui/
 - 随笔评论 POST `/essays/{id}/comments` 也需要 `X-Request-Id`。
 
 ### 3.4 上传（admin-file）
-- `POST https://hanphone.top/upload/avatar`（免鉴权，multipart 字段 `avatar`，≤5MB，IP 限频）→ `{ code, message, url }`。`FileApi` 独立 Retrofit（域名不同、无 /api 前缀）。
+- `POST https://steven.top/upload/avatar`（免鉴权，multipart 字段 `avatar`，≤5MB，IP 限频）→ `{ code, message, url }`。`FileApi` 独立 Retrofit（域名不同、无 /api 前缀）。
 
-### 3.5 聊天（hanphone-chat）— 协议
-- Socket：`https://hanphone.cn` + path `/chat-api/socket.io`（socket.io v4 / EIO=4）。
+### 3.5 聊天（steven-chat）— 协议
+- Socket：`https://steven.cn` + path `/chat-api/socket.io`（socket.io v4 / EIO=4）。
 - 连接后 10 秒内发 `authenticate(blogJWT)`，否则被断开。
 - 公共聊天室事件：`requestPublicHistory`→`publicHistory`；`publicMessage`→`publicMessageBroadcast`；`publicOnlineCount`；AI：`publicAiStreamStart/Chunk/End/Error`（@寒枫 触发）；`messageDeleted`。
 - 私信事件：`userMessage`（普通用户发给管理员）、`adminMessage(userId, content)`（管理员回）、`message`（收到私信）、`userListUpdated`（管理员在线用户）。
@@ -138,20 +138,20 @@ ui/
 
 ### 我的 / 设置
 - 「我的」= 概览：头部、登录态卡、站点统计、**更多入口（热点聚合/项目/文库/照片墙/留言板/友链/设置）**；关于信息已移入设置页。
-- **热点页（入口「我的 → 更多 → 热点」，页面标题也已是「热点」，不再叫「热点聚合」）**：原生页 `ui/hot/`（对标 web `/insight`）。三视图：**热点**（分类 chips 全部/GitHub 热门/HF 趋势/AI 要闻 + 中文优先卡片，点击开链接）、**榜单**（模态 chips，**高密度行**：排名/变化 + 模型 + 厂商·价格·上下文 + 各榜单分数，细分割线分隔 + Canvas 手绘近 30 天折线趋势；**排名=排序位置**，无排名时用序号兜底；**每个模态独立 `LazyListState`**，切换领域从头开始、不带着旧滚动位置跳到同名模型）、**对比**（紧凑工具栏 + 底部弹层选择器 **按榜单 / 按公司 / 搜索**，可选模型全部来自 `/hot/leaderboards` 与 `/hot/models`，最多 6 个；**默认选六家代表厂商各自最强**：DeepSeek/Z.ai(Kimi 之外)/Kimi/Anthropic/OpenAI/Google（取自文本榜 AA 智能指数排序）；「指标 × 模型」逐行高亮最优值、只显示至少一个模型有分的口径；分享走系统 Intent → `hanphone.cn/insight/?view=compare&models=...`）。顶部有**「名称归一」开关（默认开）**：关闭时厂商名与模型行变体/日期后缀按信源原始展示（`Alibaba-ATH`、`z-ai`、`claude-opus-4-5-20251101`），实体合并不受影响。公开接口 `/hot/*`（无需登录），三层缓存（`hot_*.json`）并入数据管理「热点聚合（洞察）」分项。
+- **热点页（入口「我的 → 更多 → 热点」，页面标题也已是「热点」，不再叫「热点聚合」）**：原生页 `ui/hot/`（对标 web `/insight`）。三视图：**热点**（分类 chips 全部/GitHub 热门/HF 趋势/AI 要闻 + 中文优先卡片，点击开链接）、**榜单**（模态 chips，**高密度行**：排名/变化 + 模型 + 厂商·价格·上下文 + 各榜单分数，细分割线分隔 + Canvas 手绘近 30 天折线趋势；**排名=排序位置**，无排名时用序号兜底；**每个模态独立 `LazyListState`**，切换领域从头开始、不带着旧滚动位置跳到同名模型）、**对比**（紧凑工具栏 + 底部弹层选择器 **按榜单 / 按公司 / 搜索**，可选模型全部来自 `/hot/leaderboards` 与 `/hot/models`，最多 6 个；**默认选六家代表厂商各自最强**：DeepSeek/Z.ai(Kimi 之外)/Kimi/Anthropic/OpenAI/Google（取自文本榜 AA 智能指数排序）；「指标 × 模型」逐行高亮最优值、只显示至少一个模型有分的口径；分享走系统 Intent → `steven.cn/insight/?view=compare&models=...`）。顶部有**「名称归一」开关（默认开）**：关闭时厂商名与模型行变体/日期后缀按信源原始展示（`Alibaba-ATH`、`z-ai`、`claude-opus-4-5-20251101`），实体合并不受影响。公开接口 `/hot/*`（无需登录），三层缓存（`hot_*.json`）并入数据管理「热点聚合（洞察）」分项。
 - **设置 → 检查更新**：弹窗的 Release 说明用 `MarkdownContent` 渲染（原先是纯文本，Markdown 不显示）；正文高亮/标题正常。
 - ⚠️ **不再使用写死的「精选代表模型」**：web/App 的选择器都改为从榜单实时构建（按榜单/按公司/搜索）。后端 `FeaturedModelRegistry` 与 `/hot/models/featured` 已**彻底删除**（`FeaturedGroupVO`/`FeaturedModelVO` 一并移除）。
 - **厂商归一（后端 `hot/model/VendorRegistry`）**：`/hot/vendors` 返回归一后的公司（大小写/连字符/子品牌别名合并，如 Alibaba/Alibaba-ATH/Qwen → Alibaba、z-ai/Z.ai/Z-AI → Z.ai、Mistral/mistralai、SpaceXAI/x-ai → xAI、`~` 前缀剥离）；**重点厂商置顶**：Anthropic、DeepSeek、OpenAI、Kimi、Alibaba、Z.ai、Google、Xiaomi、ByteDance。`/hot/models?vendor=&sort=newest|name|price|context&limit=` 支持按公司/关键词取模型并排序（默认越新越前）；模型行的 `vendor` 也已归一显示。
-- **照片墙入口**（「我的」→ 更多）：用通用 WebView 打开 `https://hanphone.cn/atlas/`（nginx alias 托管，页面自带瀑布流/便利贴/时间线展示与筛选），路由复用 `webview?url=...`（`App.kt` 的 `onOpenPhotoWall`）。登录态由 `core/AuthBridge.kt` 注入，与 App 共用（详见坑点 15）。
+- **照片墙入口**（「我的」→ 更多）：用通用 WebView 打开 `https://steven.cn/atlas/`（nginx alias 托管，页面自带瀑布流/便利贴/时间线展示与筛选），路由复用 `webview?url=...`（`App.kt` 的 `onOpenPhotoWall`）。登录态由 `core/AuthBridge.kt` 注入，与 App 共用（详见坑点 15）。
 - **照片墙页面有独立加载态**：`Atlas.vue` 早期只有空态没有加载态，`atlasData` 初始 `[]` 导致接口返回前先闪「没有符合筛选条件的照片」。App 里必现——每次进入都是全新页面实例，而 WebView 的 `sessionStorage.atlasWelcomeShown` 会持久化，第二次起欢迎页被跳过，没有东西遮挡这段空窗（`/show` 冷启动实测约 2.3s）。已加 `isLoading`（初值 `true`，只在 `finally` 置 `false`）。**WebView 侧改这类「异步数据 vs 空态」时注意同样的坑**。
 - **为什么 App 里没有开场动画**：照片墙的欢迎页由 `sessionStorage.atlasWelcomeShown` 控制，`domStorageEnabled = true` 让它在 WebView 里**跨会话持久化**，所以第二次起直接跳过欢迎页（用户希望保持这个行为）。首次安装/清数据后仍会看到 3s 欢迎页。
 - **旧包会被 Service Worker「钉死」（照片墙改动不生效/仍闪空态的真正原因）**：`vite-plugin-pwa` 默认生成 `NavigationRoute`，**匹配所有导航且忽略查询串**，始终返回预缓存里的 `index.html`；旧 SW 没换掉之前，App 一直跑旧 `Atlas.vue`。加上 nginx 未给 `sw.js`/`index.html` 配 `Cache-Control`（被 Cloudflare 按 4h 缓存），发版后旧包可能维持很久。已在 `apps/photo-wall/vite.config.ts` 去掉 `NavigationRoute`、入口 html 不预缓存、导航改 `NetworkFirst`（`atlas-pages`）；SW 文件名带构建版本 + 注册代码内联 `index.html`，绕过 Cloudflare 对 `sw.js`/`registerSW.js` 的 4h 缓存。**排查「网页改了 App 里没变化」先想到旧 SW**。详见 `docs/photo-wall-image-optimization.md`。
 - 「项目」= 独立页：类型筛选 chips（全部/完整项目/工具箱/小游戏/小练习）+ 分组卡片（完整项目=大卡片、其余=双列网格；推荐角标、技术栈标签），数据来自 `GET /projects`（推荐在前、type 分组，与 web ProjectClient 一致）；点击卡片用 **WebView** 内开项目链接（`ui/webview/WebViewScreen.kt`：JS 开启、加载进度条、系统返回先回退 WebView 历史、右上角菜单可在浏览器打开）。
-- 「文库」= 独立页：数据来自 `GET /docs`，按 `docNamespace` 构建文件夹树（`blog/docs/子目录` → 顶层文件夹，对齐 web DocLoader）；文件夹浏览 + 面包屑、名称/路径搜索、类型筛选 pills（Word/PDF/MD/HTML 带计数，对齐 web DocsFilter）；文件行 = 彩色类型徽标 + 名称 + 推荐星 + 日期；打开文件：**HTML → WebView**、**MD → 应用内 Markdown 预览**（`DocMarkdownScreen`，文件服务原文去 frontmatter 后渲染）、**PDF/DOCX → 系统打开/下载**；文件 URL = `https://hanphone.top/{docNamespace}/{文件名}` 逐段 URI 编码（`util/buildDocFileUrl`），打开即上报浏览量 `POST /docs/{docId}/view`。
+- 「文库」= 独立页：数据来自 `GET /docs`，按 `docNamespace` 构建文件夹树（`blog/docs/子目录` → 顶层文件夹，对齐 web DocLoader）；文件夹浏览 + 面包屑、名称/路径搜索、类型筛选 pills（Word/PDF/MD/HTML 带计数，对齐 web DocsFilter）；文件行 = 彩色类型徽标 + 名称 + 推荐星 + 日期；打开文件：**HTML → WebView**、**MD → 应用内 Markdown 预览**（`DocMarkdownScreen`，文件服务原文去 frontmatter 后渲染）、**PDF/DOCX → 系统打开/下载**；文件 URL = `https://steven.top/{docNamespace}/{文件名}` 逐段 URI 编码（`util/buildDocFileUrl`），打开即上报浏览量 `POST /docs/{docId}/view`。
 - 「设置」= 入口列表：**外观**（→子页：主题:跟随系统/白日（浅色）/黑夜（深色）；自定义背景:相册选图→私有目录→全局背景层 + 模糊 0-25 滑块 + 清除）+ **数据管理**（→子页：按功能/页面分项显示占用并一键清除：首页·统计/随笔/留言板·友链/项目/文库/**图片缓存（Coil 磁盘+内存）**/消息聊天；单项清除即时生效、`清除全部` 弹确认框并连图片缓存一起清，仅清本机缓存不影响服务器）+ **检查更新**（行内点击检查，副标题显示当前版本号）+ **关于**（App 图标/名称/简介 + 访问博客网站/GitHub 链接）。外观/数据管理是独立子页（路由 `settings/appearance`、`settings/data`），设置页只放入口避免过长。**账号区已删除**（「我的」页已含登录态/退出/资料编辑）；访客头像上传同步移除（匿名留言不再可配置本地头像）。
 - **资料编辑**（「我的」点头像，对齐网页 UserInfoForm）：昵称 + 头像 + **邮箱**（改邮箱需向新邮箱发通用验证码 `scene=general`，非管理员必填；管理员免验证码）+ **新密码**（可选，≥6 位含字母数字，`md5` 传输）。保存走 `POST /user/current/update`（body 根级带 `captcha`），后端 `UserServiceImpl.updateCurrentUser` 会对 `user.password` 做 bcrypt。
-- 「设置 → 关于」：**博客图标**（`R.drawable.ic_blog`，取自 web PWA icon-512）徽标 + App 名 + 单行简介 + 链接行（**访问博客网站 hanphone.cn / 作者 GitHub**），点击走系统浏览器。版本号只在「检查更新」区显示一次（不重复）。
-- **检查更新**（设置→检查更新）：读 `https://api.github.com/repos/HanphoneJan/hanphone-blog/releases/latest`（tag 语义化比较 `isNewerVersion(tag, BuildConfig.VERSION_NAME)`，取 .apk 资产 URL），有新版弹「发现新版本 vX + Release 说明 + 去更新(浏览器下载 APK)/稍后」，无新版 toast「已是最新版本」。API 与下载链在**直连网络可用**。⚠️ 因为是语义化比较，**同版本号重新发布 APK 不会让已装用户收到更新提示**——要让用户升级必须同时抬 `versionCode`。
+- 「设置 → 关于」：**博客图标**（`R.drawable.ic_blog`，取自 web PWA icon-512）徽标 + App 名 + 单行简介 + 链接行（**访问博客网站 steven.cn / 作者 GitHub**），点击走系统浏览器。版本号只在「检查更新」区显示一次（不重复）。
+- **检查更新**（设置→检查更新）：读 `https://api.github.com/repos/StevenJan/steven-blog/releases/latest`（tag 语义化比较 `isNewerVersion(tag, BuildConfig.VERSION_NAME)`，取 .apk 资产 URL），有新版弹「发现新版本 vX + Release 说明 + 去更新(浏览器下载 APK)/稍后」，无新版 toast「已是最新版本」。API 与下载链在**直连网络可用**。⚠️ 因为是语义化比较，**同版本号重新发布 APK 不会让已装用户收到更新提示**——要让用户升级必须同时抬 `versionCode`。
 - **发布渠道**：GitHub Release `v{versionName}`（debug 密钥签名的 release APK，`assembleRelease` 已配 `signingConfig = debug`，可覆盖升级；正式签名留 S5）。
 - **占位图规范**：未登录头像/登录页/注册页/关于徽标一律用 `R.drawable.ic_blog`（CircleShape 裁剪），**不再用文字「云」**。
 
@@ -178,7 +178,7 @@ export GRADLE_OPTS="-Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=10808 -Dhttps.pr
 
 # 装机 + 验证
 adb install -r app/build/outputs/apk/debug/app-debug.apk
-adb shell am start -n com.hanphone.blog/.MainActivity
+adb shell am start -n com.steven.blog/.MainActivity
 adb shell uiautomator dump /sdcard/ui.xml && adb shell cat /sdcard/ui.xml   # 看渲染文本
 adb logcat -d | grep -i "FATAL EXCEPTION"                                   # 崩溃检查（必须 0）
 ```
@@ -213,12 +213,12 @@ adb logcat -d | grep -i "FATAL EXCEPTION"                                   # �
 11. **Coil 缓存管理（设置页数据管理）**：图片缓存不进 ContentStore（它在 App 缓存目录），数据管理单独统计/清除 `LocalImageLoader.current` 的 `diskCache.size/clear() + memoryCache.size/clear()`。坑：`MemoryCache.size` 是 **Int**（与 `?: 0L` 合并会类型漂移成 Number 编译错，需 `.toLong()`）；`DiskCache.clear()` 是 suspend。
 12. **图片占位**：未登录头像/登录注册页/关于徽标统一用 `R.drawable.ic_blog`（拷贝自 web `icon-512x512.png`）——别用文字「云」当占位。
 13. **列表图片一律走缩略图**：随笔九宫格用 `displayUrl()`，详情页大图才用 `originalUrl()`。原图单张可达 12MB、单篇最多 9 张（约 40MB），Coil 会把磁盘缓存撑爆且拖垮 2C2G 的服务器。服务端（admin-file）上传时已生成 320w/800w/1600w WebP，前端只要带上 `thumbPath` 就够了。
-14. **照片墙是 WebView，不是原生页**：`https://hanphone.cn/atlas/` 由 nginx alias 托管的 Vue SPA，图片走浏览器内核加载 + Service Worker 缓存，**不受 App「数据管理 → 图片缓存」控制**。登录态通过 `core/AuthBridge.kt` 注入（见下条），不再各存一份。
+14. **照片墙是 WebView，不是原生页**：`https://steven.cn/atlas/` 由 nginx alias 托管的 Vue SPA，图片走浏览器内核加载 + Service Worker 缓存，**不受 App「数据管理 → 图片缓存」控制**。登录态通过 `core/AuthBridge.kt` 注入（见下条），不再各存一份。
 
 15. **第一方 WebView 页面必须注入 App 登录态（`core/AuthBridge.kt`）**：
     - 照片墙的登录态存在**它自己的 localStorage**（`token` / `userInfo` / `expire`），与 App 的 DataStore 是两套互不相通的存储。不注入就会出现「App 里退出登录、照片墙仍显示已登录还能点赞/进管理页」。
     - 用 `WebViewCompat.addDocumentStartJavaScript`，**不是** `onPageFinished` + `evaluateJavascript`：照片墙的 Pinia store 在模块初始化时**同步**读 localStorage（`apps/photo-wall/src/store/store.ts`），晚一拍就来不及了。需 `androidx.webkit`（已加，`libs.versions.toml` 的 `webkit = 1.12.1`），WebView < 83 走 `evaluateJavascript` + `reload()` 降级。
-    - **只对 `AuthBridge.FIRST_PARTY_ORIGINS`（`hanphone.cn` / `www.hanphone.cn`）生效**。项目页会打开任意外链，加白名单前想清楚：进去的域名就等于拿到用户 token。
+    - **只对 `AuthBridge.FIRST_PARTY_ORIGINS`（`steven.cn` / `www.steven.cn`）生效**。项目页会打开任意外链，加白名单前想清楚：进去的域名就等于拿到用户 token。
     - App 未登录时脚本是**删除**这三个键（不是跳过）——否则用户在照片墙里单独登录过、之后又在 App 退出，照片墙会一直带着旧 token。
     - 登出入口在 `ProfileScreen` 的「退出」：`clearAuth()` + `TokenStore.clear()` + **`AuthBridge.clearWebStorage()`**。用 `WebStorage.deleteAllData()` 而不是 `evaluateJavascript("localStorage.clear()")`：后者要求 WebView 实例存活，而登出时页面往往已销毁；`WebStorage` 也不会误删 Cache Storage（Service Worker 资源缓存）。
     - **历史坑（已修，别再踩）**：早期没有注入，但照片墙却显示「已登录」，看起来像注入已经存在。真相是照片墙**自带的登录页**在 WebView 里被用过一次，`domStorageEnabled = true` 让 localStorage 按 origin 持久留在 App 数据目录里。**`domStorageEnabled=true` 意味着 WebView 里的状态会跨会话存活**，排查「为什么它记得我」时先想到这条。
@@ -235,8 +235,8 @@ adb logcat -d | grep -i "FATAL EXCEPTION"                                   # �
 - ✅ 已完成：信息架构(4Tab)、登录(md5)/注册、点赞评论、随笔朋友圈+评论回复、搜索、归档并首页、筛选面板（覆盖式/遮罩/非卡片）、消息 Hub（聊天室/私信+管理员分流）、留言板、友链、设置页、双主题、自定义背景+模糊、头像上传、网站图标、骨架屏、三层缓存、心跳修复、ViewModel+Hilt、Moshi、随笔 Paging 3 + 冷启动缓存、私信本地通知。
 - ✅ 项目页 + 文库页（WebView 内开 HTML、fetch+loadDataWithBaseURL 渲染）、通用 WebView、文档/项目/文库/聊天(Chat 历史+私信+用户列表) 本地缓存、数据管理（分项清除 + Coil 图片缓存）、账号编辑（邮箱+验证码+管理员免验、密码 md5）、体验打磨（去认证成功 toast、@用户名防抖、随笔秒显、下拉圈圈门控）、版本 v1.0.0、App 图标与 PWA maskable 图标一致（ic_launcher_fg 复刻 WebAPK 52% 比例 + ic_blog 占位）。
 - ✅ 随笔图片缩略图（九宫格走 `displayUrl()`，详情页走 `originalUrl()`；21 张图 74.65 MB → 0.75 MB，100×）、修掉 `urlType != "video"` 大小写导致视频被当图片加载的 bug。详见 `docs/photo-wall-image-optimization.md`。
-- ✅ 第一方 WebView（照片墙）登录态打通：`core/AuthBridge.kt` 在文档开始时把 App 的 DataStore 登录态注入页面 localStorage（仅 `hanphone.cn` 白名单），登出时同步清理；`AuthData` 补 `username` 字段。
-- ✅ 热点聚合页（`ui/hot/`，对标 web `/insight`）：热点流 / 高密度模型榜单（Canvas 手绘近 30 天折线）/ 综合对比（底部弹层选择器：按榜单·按公司·搜索，结果优先布局 + 分享链接）；入口「我的 → 更多」，三层缓存 + 数据管理分项。对比选择器与 web 均已弃用写死的 featured，改由榜单实时构建。**v1.0.1** 发布：页面更名「热点」、榜单名次=排序位置、切换领域重置滚动、默认对比六家代表厂商、更新弹窗 Markdown 渲染。**v1.0.2**（`hanphone-1.0.2-android.apk`，versionCode 16）补充顶部**「名称归一」开关（默认开）**——关闭时厂商名与模型行变体/日期后缀按信源原始展示（`anthropic`、`Alibaba-ATH`、`z-ai`），实体合并不受影响；后端支持 `normalized` 参数（仅展示层）。后端榜单改用 AA 代码指数排序 + 模型名归一（变体后缀）+ LMArena 经服务器代理采集（见 server 文档）。**未做**雷达图与价格散点（App 无图表库，按规矩不擅自引入重依赖）。
+- ✅ 第一方 WebView（照片墙）登录态打通：`core/AuthBridge.kt` 在文档开始时把 App 的 DataStore 登录态注入页面 localStorage（仅 `steven.cn` 白名单），登出时同步清理；`AuthData` 补 `username` 字段。
+- ✅ 热点聚合页（`ui/hot/`，对标 web `/insight`）：热点流 / 高密度模型榜单（Canvas 手绘近 30 天折线）/ 综合对比（底部弹层选择器：按榜单·按公司·搜索，结果优先布局 + 分享链接）；入口「我的 → 更多」，三层缓存 + 数据管理分项。对比选择器与 web 均已弃用写死的 featured，改由榜单实时构建。**v1.0.1** 发布：页面更名「热点」、榜单名次=排序位置、切换领域重置滚动、默认对比六家代表厂商、更新弹窗 Markdown 渲染。**v1.0.2**（`steven-1.0.2-android.apk`，versionCode 16）补充顶部**「名称归一」开关（默认开）**——关闭时厂商名与模型行变体/日期后缀按信源原始展示（`anthropic`、`Alibaba-ATH`、`z-ai`），实体合并不受影响；后端支持 `normalized` 参数（仅展示层）。后端榜单改用 AA 代码指数排序 + 模型名归一（变体后缀）+ LMArena 经服务器代理采集（见 server 文档）。**未做**雷达图与价格散点（App 无图表库，按规矩不擅自引入重依赖）。
 - ⏭ 下一步候选：S5 release 签名 + R8（启用混淆需补 Moshi 反射 proguard 规则）。
 - 技术债：Markdown 渲染器可换成熟库；私信 AI（toAi）未做；首页分页仍是手写（客户端排序+多筛选源与 Paging 3 模型冲突，暂保留）。
 
@@ -248,11 +248,11 @@ adb logcat -d | grep -i "FATAL EXCEPTION"                                   # �
 3a. **缓存层扩展（加载体验专项）**：ContentStore 新增 types/tags/archive、essay_comments_{id}、article_{id}(+_comments)、essay_{id}、doc_{hash}(文库 MD/HTML 原文 24h TTL)、enrich_attempts(友链补全节流)，均并入数据管理分项清除；MemoryCache 新增 homeTypes/homeTags/archiveBlogs + 搜索结果缓存(5min/同词去重)。消息页私信历史与管理员用户列表状态迁入 ChatSocket 单例（REST 私信 30s/用户列表 60s 节流，Tab 切换/进出会话不再重建丢态、不重复拉）。首页 selectedYear 入 VM、loadLatest generation 防筛选竞态；搜索输入即搜+350ms 防抖（对齐 web）；留言板发送后本地回显 addMessageLocal（对齐 web ADD_MESSAGE）；文章/随笔详情正文+评论与文库原文落盘冷启动秒显。
 4. **Markdown**：mikepenz/multiplatform-markdown-renderer 0.31.0（m3 + coil2 + **code 高亮模块**）。`Markdown.kt` 只是薄封装：预处理（HTML 实体解码 + 相对 URL 绝对化）→ `Markdown(...)`。代码高亮 = `markdownComponents(codeFence/codeBlock → MarkdownHighlightedCodeFence/Block)`，Atom 主题随深浅色（`surface.luminance()` 判断）；表格列宽 `markdownDimens(tableCellWidth = 220.dp)` 让宽表自动进入横向滚动（库内建，列少时会 fillMaxWidth 不滚）。typography 必须覆盖：库默认 h1=displayLarge(57sp) 巨大，已按 web blog.css 收敛为 26/22/19/17sp。
 5. **文章详情导航**：正文按块级切分渲染（`splitMarkdownBlocks`），标题块 itemIndex 即锚点；TOC 入口 = 详情页右下角 SmallFloatingActionButton → ModalBottomSheet 列表 → `animateScrollToItem(blockIndex + 1)`（+1 跳过头部 item）。顶部 LinearProgressIndicator 显示阅读进度（firstVisibleItemIndex 占比）。
-4. **部署 hanphone-chat**：本机 `ssh blog` 免密（公钥已装）；源码在仓库 **`chat-server/`**（原 `~/server_chat/src`），pm2 进程名 `hanphone-chat-server`（跑 dist，改完需 `pnpm --filter chat-server build` 再 `pm2 restart hanphone-chat-server`）。协议变更先看仓库 **`docs/chat/android-protocol.md`**。
+4. **部署 steven-chat**：本机 `ssh blog` 免密（公钥已装）；源码在仓库 **`chat-server/`**（原 `~/server_chat/src`），pm2 进程名 `steven-chat-server`（跑 dist，改完需 `pnpm --filter chat-server build` 再 `pm2 restart steven-chat-server`）。协议变更先看仓库 **`docs/chat/android-protocol.md`**。
 
 ## 9. 给新 AI 的规矩（Rulebook）
 
-1. **先读网页再动手**：任何接口/交互先看 `web/` 与 `hanphone-chat/` 的代码，按网站行为实现。
+1. **先读网页再动手**：任何接口/交互先看 `web/` 与 `steven-chat/` 的代码，按网站行为实现。
 2. **逐条解析需求**：用户说“面板从上往下”先确认是“弹出方向”还是“内部排列”，再动手；不确定就问。
 3. **保持既有规范**：双主题/非卡片化筛选/朋友圈随笔/紧凑控件/网站图标 —— 别“顺手美化”成别的风格。
 4. **安全第一**：所有网络调用 try/catch；聊天连接钩子保留；分页/认证参数查第 3 节表。
@@ -262,7 +262,7 @@ adb logcat -d | grep -i "FATAL EXCEPTION"                                   # �
 8. **UI 组件尺寸**：M3 `OutlinedTextField` 最小 56dp、`Button` 最小 40dp，不要强制更小（label 会被挤压）；小字标签用 `labelSmall`（自带 16sp 行高），只改 `fontSize` 会继承 bodyLarge 的 26sp 行高导致间距过大。聊天输入栏用 `BasicTextField` 胶囊（44dp）。
 9. **加载体验**：新页面首载用骨架屏（`ui/components/Skeleton.kt`，勿用全屏转圈）；列表/详情返回秒显靠 `MemoryCache` + 静默刷新；"我的"页支持下拉刷新。
 9a. **长按选择文字**：正文/评论/留言等可读文本统一包 `SelectionContainer`（博客正文按块、随笔正文、评论/留言内容）；「点内容=回复」的评论/留言内容用 `Modifier.pointerInput { detectTapGestures { ... } }` 与 `SelectionContainer` 共存（点=动作、长按=复制）。
-13. **网页版文库能看、App WebView 白屏**：文件服务（admin-file，hanphone.top）对所有文件响应带 `Content-Disposition: attachment`——WebView 直接 `loadUrl` 会把页面当**下载**，主框架 200 后立刻跳 `about:blank` 白屏（`onPageStarted` 不触发、子资源不加载、无 onReceivedError）。**修复：先 fetch 文件文本再用 `loadDataWithBaseURL(baseUrl=文件目录, html, "text/html","utf-8",null)` 渲染**（网页版 docLoader 也是 fetch 字节渲染，不是直接导航）。文库 .md 预览同理会 fetch 文本。判断「附件下载 vs 页面」看响应头 `content-disposition`。
+13. **网页版文库能看、App WebView 白屏**：文件服务（admin-file，steven.top）对所有文件响应带 `Content-Disposition: attachment`——WebView 直接 `loadUrl` 会把页面当**下载**，主框架 200 后立刻跳 `about:blank` 白屏（`onPageStarted` 不触发、子资源不加载、无 onReceivedError）。**修复：先 fetch 文件文本再用 `loadDataWithBaseURL(baseUrl=文件目录, html, "text/html","utf-8",null)` 渲染**（网页版 docLoader 也是 fetch 字节渲染，不是直接导航）。文库 .md 预览同理会 fetch 文本。判断「附件下载 vs 页面」看响应头 `content-disposition`。
 14. **Toast 原则**：非必要不弹。成功且 UI 已有可见反馈（列表插入新条目、点赞数字变化、头像预览更新）一律不弹；失败、表单校验、登录态提示才弹。聊天 socket 的连接失败走 ReconnectBanner，不发 toast。
 15. **软键盘适配（重要，勿用裸 imePadding）**：Manifest 里 MainActivity `android:windowSoftInputMode="adjustResize"`。Scaffold 已按系统 insets 预留底部导航栏空间，若对底部输入再直接 `imePadding()` 会「双抬升」——键盘上方出现整段导航栏高的空白（曾出现 ~1200px 缝隙）。统一改为 `imeLiftAboveKeyboard()`（`ui/components/Common.kt`，= `(IME − 导航栏) 内边距` 差值，键盘弹出时恰好贴齐键盘顶），覆盖场景：
    - 文章评论 / 留言板底部输入条（`CommentInputBar`）

@@ -5,7 +5,7 @@
 // NEXT_PUBLIC_PICTURE_BASE_URL: 图片服务基础地址
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8090/api'
 export const NEXT_API_BASE_URL = process.env.NEXT_PUBLIC_NEXT_API_BASE_URL || 'http://localhost:8090/next-api'
-export const PICTURE_BASE_URL = process.env.NEXT_PUBLIC_PICTURE_BASE_URL || 'https://hanphone.top'
+export const PICTURE_BASE_URL = process.env.NEXT_PUBLIC_PICTURE_BASE_URL || 'https://steven.top'
 
 // 通过修改ENDPOINTS可以修改API接口路径
 export const ENDPOINTS = {

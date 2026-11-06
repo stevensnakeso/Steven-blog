@@ -17,7 +17,7 @@
     <div class="sidebar-content">
       <!-- 品牌标识 - 摄影工作室风格 -->
       <div class="studio-logo">
-        <span class="logo-text">Hanphone</span>
+        <span class="logo-text">Steven</span>
         <span class="logo-subtext">{{ isAdminPage ? 'ADMIN' : 'GALLERY' }}</span>
       </div>
       

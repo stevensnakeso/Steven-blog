@@ -30,7 +30,7 @@ function loadEnvFile(): void {
 export function loadConfig(): McpConfig {
   loadEnvFile();
 
-  const baseUrl = (process.env.BLOG_API_BASE_URL || 'https://hanphone.cn/api').replace(/\/+$/, '');
+  const baseUrl = (process.env.BLOG_API_BASE_URL || 'https://steven.cn/api').replace(/\/+$/, '');
 
   const internalApiKey = process.env.INTERNAL_API_KEY?.trim() || '';
   if (!internalApiKey) {

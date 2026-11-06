@@ -2,7 +2,7 @@
 
 本文档详细说明照片墙项目的所有API接口定义、请求参数和响应格式。
 
-**基础URL**: `https://hanphone.cn/nodejs/atlas` (生产) / `http://localhost:4001` (开发)
+**基础URL**: `https://steven.cn/nodejs/atlas` (生产) / `http://localhost:4001` (开发)
 
 ## 📑 目录
 

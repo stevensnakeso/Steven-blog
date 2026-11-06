@@ -29,7 +29,7 @@ import React from 'react'
 
 import { API_CODE } from '@/lib/constants'
 // 文件服务域名
-const fileDomain = process.env.NEXT_PUBLIC_FILE_DOMAIN || 'hanphone.top'
+const fileDomain = process.env.NEXT_PUBLIC_FILE_DOMAIN || 'steven.top'
 
 // 定义文件和目录的类型
 interface FileItem {

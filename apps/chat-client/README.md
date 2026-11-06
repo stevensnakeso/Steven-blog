@@ -1,6 +1,6 @@
-# HanPhone Chat - Client
+# Steven Chat - Client
 
-> 📦 已从独立仓库 `HanphoneJan/hanphone-chat` 迁移至本仓库 `apps/chat-client/`（对齐照片墙的
+> 📦 已从独立仓库 `StevenJan/steven-chat` 迁移至本仓库 `apps/chat-client/`（对齐照片墙的
 > 独立 Vite 应用模式：`base: /chat/` 静态构建，nginx `/chat/` 托管）。部署见 `../../docs/chat/DEPLOYMENT.md`。
 
 [![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/)
@@ -48,8 +48,8 @@
 ### 克隆项目
 
 ```bash
-git clone https://github.com/yourusername/hanphone-chat.git
-cd hanphone-chat/client
+git clone https://github.com/yourusername/steven-chat.git
+cd steven-chat/client
 ```
 
 ### 安装依赖
@@ -314,7 +314,7 @@ A: 可能原因：
 
 ## 👤 作者
 
-**HanphoneJan** - [GitHub](https://github.com/yourusername)
+**StevenJan** - [GitHub](https://github.com/yourusername)
 
 ## 🙏 致谢
 

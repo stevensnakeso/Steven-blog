@@ -53,7 +53,7 @@ async function blogApiFetch<T>(path: string, options: RequestInit = {}): Promise
 }
 
 /**
- * 将 blog User 转换为 hanphone-chat User 格式
+ * 将 blog User 转换为 steven-chat User 格式
  */
 function convertBlogUser(blogUser: any): User | null {
   if (!blogUser) return null;

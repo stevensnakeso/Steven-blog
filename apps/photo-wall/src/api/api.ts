@@ -1,9 +1,9 @@
 // API接口地址配置
 // 通过修改API_BASE_URL来切换不同的环境
 // export const API_BASE_URL = 'http://localhost:4000';
-export const PICTURE_BASE_URL = 'https://hanphone.top'
-export const API_BASE_URL = 'https://hanphone.cn/nodejs/atlas';
-export const BLOG_BASE_URL = 'https://hanphone.cn/api';
+export const PICTURE_BASE_URL = 'https://steven.top'
+export const API_BASE_URL = 'https://steven.cn/nodejs/atlas';
+export const BLOG_BASE_URL = 'https://steven.cn/api';
 // 通过修改ENDPOINTS可以修改API接口路径
 export const ENDPOINTS = {
   LOGIN: `${BLOG_BASE_URL}/login`,

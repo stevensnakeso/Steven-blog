@@ -1,12 +1,12 @@
 [package]
-name = "hanphone-blog"
+name = "steven-blog"
 version = "1.0.0"
 description = "寒枫的个人博客"
 authors = ["寒枫"]
 edition = "2024"
 
 [lib]
-name = "hanphone_blog_lib"
+name = "steven_blog_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

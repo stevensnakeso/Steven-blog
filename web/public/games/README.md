@@ -1,4 +1,4 @@
-# 🎮 Hanphone Game Collection
+# 🎮 Steven Game Collection
 
 ## 简介 | Introduction
 
@@ -35,10 +35,10 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/hanphonejan/hanphone-game.git
+git clone https://github.com/stevenjan/steven-game.git
 
 # 进入项目目录
-cd hanphone-game
+cd steven-game
 
 # 使用任意本地服务器运行，例如 Python 的 http.server
 python -m http.server 8000
@@ -53,7 +53,7 @@ npx http-server
 ## 项目结构 | Project Structure
 
 ```
-hanphone-game/
+steven-game/
 ├── 2048/               # 2048 数字拼图游戏
 ├── blackblocks/        # 黑块挑战
 ├── crossy-road/        # 过马路大冒险

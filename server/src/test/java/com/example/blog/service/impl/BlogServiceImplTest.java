@@ -23,8 +23,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class BlogServiceImplTest {
 
-    private static final String COVER = "https://hanphone.top/blog%2Fblogs%2Fcover.jpeg";
-    private static final String TYPE_PIC = "https://hanphone.top/blog%2Ftype%2Fjava.jpeg";
+    private static final String COVER = "https://steven.top/blog%2Fblogs%2Fcover.jpeg";
+    private static final String TYPE_PIC = "https://steven.top/blog%2Ftype%2Fjava.jpeg";
 
     @Mock
     private BlogRepository blogRepository;

@@ -93,7 +93,7 @@ const swaggerOptions = {
         description: '本地服务器',
       },
       {
-        url: 'https://hanphone.top',
+        url: 'https://steven.top',
         description: '生产服务器',
       },
     ],
@@ -106,11 +106,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // 配置CORS（仅允许白名单域名）
 const allowedOrigins = [
-  "https://hanphone.cn",
-  "https://docs.hanphone.cn",
-  "https://www.hanphone.cn",
-  "https://hanphone.top",
-  "https://www.hanphone.top",
+  "https://steven.cn",
+  "https://docs.steven.cn",
+  "https://www.steven.cn",
+  "https://steven.top",
+  "https://www.steven.top",
 ];
 app.use(
   cors({
@@ -456,13 +456,13 @@ async function buildImageMeta(absPath, relPath) {
 
     const encodedThumbs = {};
     for (const key of THUMB_WIDTHS.map(String)) {
-      encodedThumbs[key] = thumbs[key] ? `https://hanphone.top/${encodeUrlPath(thumbs[key])}` : null;
+      encodedThumbs[key] = thumbs[key] ? `https://steven.top/${encodeUrlPath(thumbs[key])}` : null;
     }
 
     return {
       width,
       height,
-      thumbPath: thumbRel ? `https://hanphone.top/${encodeUrlPath(thumbRel)}` : null,
+      thumbPath: thumbRel ? `https://steven.top/${encodeUrlPath(thumbRel)}` : null,
       thumbs: encodedThumbs,
     };
   } catch (err) {
@@ -970,7 +970,7 @@ app.use(
  *         description: 上传成功
  *         content:
  *           application/json:
- *             example: { "code": 200, "message": "头像上传成功", "url": "https://hanphone.top/blog/avatars/avatar-xxx.jpg" }
+ *             example: { "code": 200, "message": "头像上传成功", "url": "https://steven.top/blog/avatars/avatar-xxx.jpg" }
  *       400:
  *         description: 未上传文件或文件类型不支持
  *       413:
@@ -1026,7 +1026,7 @@ app.post("/upload/avatar", avatarUploadLimiter, uploadAvatar.single("avatar"), a
     res.json({
       code: 200,
       message: "头像上传成功",
-      url: `https://hanphone.top/${urlPath}`,
+      url: `https://steven.top/${urlPath}`,
       filename: finalFilename,
       originalName: fixedName,
       mimetype: req.file.mimetype,
@@ -1074,7 +1074,7 @@ app.post("/upload/avatar", avatarUploadLimiter, uploadAvatar.single("avatar"), a
  *         description: 文件上传成功
  *         content:
  *           application/json:
- *             example: { "code": 200, "message": "文件上传成功", "url": "https://hanphone.top/images/example.jpg", "filename": "xxx.jpg" }
+ *             example: { "code": 200, "message": "文件上传成功", "url": "https://steven.top/images/example.jpg", "filename": "xxx.jpg" }
  *       400:
  *         description: 没有文件被上传
  *       401:
@@ -1149,7 +1149,7 @@ app.post("/upload", authenticateToken, upload.single("file"), async (req, res) =
     res.json({
       code: 200,
       message: "文件上传成功",
-      url: `https://hanphone.top/${urlPath}`,
+      url: `https://steven.top/${urlPath}`,
       filename: req.file.filename,
       category: finalCategoryForResponse,
       namespace: namespace || null,
@@ -1209,7 +1209,7 @@ app.post("/upload", authenticateToken, upload.single("file"), async (req, res) =
  *         description: 批量上传完成
  *         content:
  *           application/json:
- *             example: { "code": 200, "message": "批量上传完成", "total": 3, "success": 2, "failed": 1, "results": [{ "success": true, "filename": "xxx.jpg", "url": "https://hanphone.top/..." }, { "success": false, "filename": "yyy.zip", "error": "文件处理失败" }] }
+ *             example: { "code": 200, "message": "批量上传完成", "total": 3, "success": 2, "failed": 1, "results": [{ "success": true, "filename": "xxx.jpg", "url": "https://steven.top/..." }, { "success": false, "filename": "yyy.zip", "error": "文件处理失败" }] }
  *       400:
  *         description: 没有文件被上传
  *       401:
@@ -1288,7 +1288,7 @@ app.post("/upload/batch", authenticateToken, upload.array("files", 20), async (r
         success: true,
         filename: file.filename,
         originalName: fixedName,
-        url: `https://hanphone.top/${urlPath}`,
+        url: `https://steven.top/${urlPath}`,
         category: finalCategoryForResponse,
         namespace: namespace || null,
         mimetype: file.mimetype,
@@ -1645,7 +1645,7 @@ app.get("/files", authenticateToken, async (req, res) => {
  *         description: 获取文件详情成功
  *         content:
  *           application/json:
- *             example: { "code": 200, "message": "获取文件详情成功", "file": { "name": "xxx.jpg", "size": 1024, "url": "https://hanphone.top/images/xxx.jpg" } }
+ *             example: { "code": 200, "message": "获取文件详情成功", "file": { "name": "xxx.jpg", "size": 1024, "url": "https://steven.top/images/xxx.jpg" } }
  *       400:
  *         description: 参数错误（缺少文件名或命名空间/分类）
  *       401:
@@ -1700,7 +1700,7 @@ app.get("/file", authenticateToken, async (req, res) => {
         extension: ext,
         category: fileCategory,
         namespace: namespace || null,
-        url: `https://hanphone.top/${urlPath}`,
+        url: `https://steven.top/${urlPath}`,
         mimetype: extensionToCategory[ext]
           ? `${extensionToCategory[ext]}/${ext.substring(1)}`
           : "application/octet-stream",

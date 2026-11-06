@@ -788,7 +788,7 @@ const Header: React.FC = () => {
                 className="text-xl font-bold bg-clip-text text-transparent cursor-pointer flex items-center whitespace-nowrap bg-gradient-to-r from-[rgb(var(--primary))] to-[rgb(var(--primary-hover))]"
                 onClick={() => changePage('')}
               >
-                <span className="hidden text-md lg:inline">Hanphone&apos;s Blog</span>
+                <span className="hidden text-md lg:inline">Steven&apos;s Blog</span>
               </div>
 
               {/* 移动端/中等屏搜索按钮：<xl 时显示，与主题按钮同尺寸 */}

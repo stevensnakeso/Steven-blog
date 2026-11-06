@@ -1,6 +1,6 @@
 # android · 云林有风（Android 原生客户端）
 
-博客的 **Kotlin + Jetpack Compose** 原生客户端，直接对接现有后端 REST API（`https://hanphone.cn/api/`），后端零改动。
+博客的 **Kotlin + Jetpack Compose** 原生客户端，直接对接现有后端 REST API（`https://steven.cn/api/`），后端零改动。
 
 ## 技术栈
 
@@ -16,7 +16,7 @@
 ## 目录结构
 
 ```
-app/src/main/java/com/hanphone/blog/
+app/src/main/java/com/steven/blog/
 ├── MainActivity.kt              # 入口
 ├── core/Settings.kt             # DataStore：主题模式 + 访客昵称/邮箱
 ├── data/
@@ -49,7 +49,7 @@ app/src/main/java/com/hanphone/blog/
 - **随笔**：朋友圈式信息流（头像/昵称/九宫格/赞评）+ 冷启动缓存秒显 + Paging 3
 - **搜索**：全局搜索（博客/随笔/文档/项目）
 - **消息 Hub**：聊天室（socket.io，AI@寒枫 流式）+ 私信（管理员分流、本地通知），历史/用户列表本地缓存，首进秒显
-- **我的**：站点统计、项目、文库、友链、留言板入口、关于（链接 hanphone.cn/GitHub）
+- **我的**：站点统计、项目、文库、友链、留言板入口、关于（链接 steven.cn/GitHub）
 - **项目**（我的 → 项目）：类型筛选 + 分组卡片，点击 WebView 内打开链接
 - **文库**（我的 → 文库）：文件夹树 + 搜索/类型筛选；HTML → WebView（fetch+loadDataWithBaseURL）、MD → 应用内预览、PDF/DOCX → 系统打开
 - **设置**：账号（头像上传/退出/编辑邮箱·密码）、外观（双主题/自定义背景）、**数据管理**（分项清除缓存 + Coil 图片缓存 + 全部清除确认）
@@ -69,7 +69,7 @@ cd android
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-> ⚠️ **本机（hanphone 开发机）构建代理注意**：Gradle 发行版下载会 307 重定向到
+> ⚠️ **本机（steven 开发机）构建代理注意**：Gradle 发行版下载会 307 重定向到
 > `github.com`（当前网络直连不通），而依赖仓库（Maven Central / Google / plugin portal）可直连。
 > 因此只需给下载这一步注入本地代理（`127.0.0.1:10808`），构建成功后发行版会被缓存到 `~/.gradle`：
 >
@@ -90,9 +90,9 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 ## 对接说明
 
-- 接口前缀 `/api` 由 nginx 剥离，App 直接请求 `https://hanphone.cn/api/...`，与 web 端一致。
-- 图片（封面/正文/头像）如为相对路径会拼上文件服务域名 `https://hanphone.top`。
-- 文章正文为 **Markdown**，`app/src/main/java/com/hanphone/blog/ui/Markdown.kt` 提供 v1 精简渲染；
+- 接口前缀 `/api` 由 nginx 剥离，App 直接请求 `https://steven.cn/api/...`，与 web 端一致。
+- 图片（封面/正文/头像）如为相对路径会拼上文件服务域名 `https://steven.top`。
+- 文章正文为 **Markdown**，`app/src/main/java/com/steven/blog/ui/Markdown.kt` 提供 v1 精简渲染；
   后续可替换为成熟库（`com.mikepenz:multiplatform-markdown-renderer`）。
 - API 基地址定义在 `app/build.gradle.kts` 的 `buildConfigField("API_BASE_URL")`，
   局域网真机联调可改为 `http://<电脑IP>:8090/api/`（并需在 debug 清单开启明文流量）。

@@ -16,11 +16,11 @@ if (file("google-services.json").exists()) {
 }
 
 android {
-    namespace = "com.hanphone.blog"
+    namespace = "com.steven.blog"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.hanphone.blog"
+        applicationId = "com.steven.blog"
         minSdk = 26
         targetSdk = 35
         versionCode = 18
@@ -36,13 +36,13 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "API_BASE_URL", "\"https://hanphone.cn/api/\"")
+            buildConfigField("String", "API_BASE_URL", "\"https://steven.cn/api/\"")
             // 局域网真机联调可改成： http://<电脑IP>:8090/api/ （需在 debug manifest 开明文流量）
         }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            buildConfigField("String", "API_BASE_URL", "\"https://hanphone.cn/api/\"")
+            buildConfigField("String", "API_BASE_URL", "\"https://steven.cn/api/\"")
             // 自分发：用 debug 密钥签名，便于直接安装/升级（正式商店签名留作 S5）
             signingConfig = signingConfigs.getByName("debug")
         }

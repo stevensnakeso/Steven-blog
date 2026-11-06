@@ -8,7 +8,7 @@ import { execSync } from 'child_process'
 import { existsSync, mkdirSync } from 'fs'
 import { join } from 'path'
 
-const REPO_NAME = 'hanphone-blog-web'
+const REPO_NAME = 'steven-blog-web'
 
 console.log('🚀 开始构建静态导出...\n')
 

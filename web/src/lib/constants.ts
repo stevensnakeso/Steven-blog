@@ -461,9 +461,9 @@ export const ASSETS = {
 // NEXT_PUBLIC_FOOTER_PSB_URL: 公安备案链接
 // NEXT_PUBLIC_FOOTER_PSB_NUMBER: 公安备案号
 export const FOOTER_CONFIG = {
-  QR_IMAGE: process.env.NEXT_PUBLIC_FOOTER_QR_IMAGE || 'https://hanphone.top/images/云林有风公众号.jpg',
+  QR_IMAGE: process.env.NEXT_PUBLIC_FOOTER_QR_IMAGE || 'https://steven.top/images/云林有风公众号.jpg',
   EMAIL: process.env.NEXT_PUBLIC_FOOTER_EMAIL || 'janhizian@qq.com',
-  GITHUB: process.env.NEXT_PUBLIC_FOOTER_GITHUB || 'https://github.com/HanphoneJan/',
+  GITHUB: process.env.NEXT_PUBLIC_FOOTER_GITHUB || 'https://github.com/StevenJan/',
   BILIBILI: process.env.NEXT_PUBLIC_FOOTER_BILIBILI || 'https://space.bilibili.com/649062555/',
   ICP_URL: process.env.NEXT_PUBLIC_FOOTER_ICP_URL || 'https://beian.miit.gov.cn/',
   ICP_NUMBER: process.env.NEXT_PUBLIC_FOOTER_ICP_NUMBER || '粤ICP备2024325722号-2',

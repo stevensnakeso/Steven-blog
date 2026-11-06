@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private ValueCallback<Uri[]> uploadMessage;
     private ActivityResultLauncher<Intent> fileChooserLauncher;
     private final static int FILE_CHOOSER_RESULT_CODE = 1;
-    private static final String TARGET_URL = "https://hanphone.cn/atlas/"; //网址
+    private static final String TARGET_URL = "https://steven.cn/atlas/"; //网址
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

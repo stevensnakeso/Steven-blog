@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HanphoneJan/admin-file.git"
+    "url": "git+https://github.com/StevenJan/admin-file.git"
   },
-  "author": "hanphone",
+  "author": "steven",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/HanphoneJan/admin-file/issues"
+    "url": "https://github.com/StevenJan/admin-file/issues"
   },
-  "homepage": "https://github.com/HanphoneJan/admin-file#readme",
+  "homepage": "https://github.com/StevenJan/admin-file#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",

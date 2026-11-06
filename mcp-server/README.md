@@ -1,4 +1,4 @@
-# Hanphone Blog MCP Server
+# Steven Blog MCP Server
 
 面向外部 AI Agent 的博客操作接口。基于 [Model Context Protocol](https://modelcontextprotocol.io)，将博客的全部内容管理能力（文章、随笔、项目、文档、友链、留言、评论、分类标签、统计）封装为 60+ 个 MCP 工具，任何支持 MCP 的 Agent（Claude Code、Claude Desktop、Cursor 等）都可以通过 HTTP 远程接入并操作博客。
 
@@ -8,7 +8,7 @@
 外部 Agent（任意位置）
       │  HTTPS + Bearer <MCP API Key>   ← 由管理员在博客后台 /admin/personal 页面生成
       ▼
-https://hanphone.cn/mcp ──nginx 反代──► mcp-server（Node.js，:4002）
+https://steven.cn/mcp ──nginx 反代──► mcp-server（Node.js，:4002）
       │ 校验密钥 ──X-Internal-Key──► POST /internal/mcp/verify-key（:8090，命中缓存则跳过）
       │ 只读工具 ──────────────────────► 博客公开接口（/blogs、/essays …）
       │ 写工具/管理读取 ──X-Internal-Key──► 后端内部接口（/internal/mcp/**，:8090）
@@ -33,10 +33,10 @@ pnpm install
 cp mcp-server/.env.example mcp-server/.env   # 修改 INTERNAL_API_KEY = server/.env 一致
 
 # 构建
-pnpm --filter hanphone-blog-mcp build
+pnpm --filter steven-blog-mcp build
 
 # 启动
-pnpm --filter hanphone-blog-mcp start        # 或开发模式：pnpm --filter hanphone-blog-mcp dev
+pnpm --filter steven-blog-mcp start        # 或开发模式：pnpm --filter steven-blog-mcp dev
 ```
 
 > Agent 访问 `/mcp` 时使用的 MCP API Key **不在 .env 里配置**，而是登录博客后台 `/admin/personal` 页面切到「MCP 密钥」tab 创建/管理。
@@ -45,7 +45,7 @@ pnpm --filter hanphone-blog-mcp start        # 或开发模式：pnpm --filter h
 
 ```bash
 curl http://127.0.0.1:4002/health
-# {"status":"ok","name":"hanphone-blog-mcp","version":"0.2.0", ...}
+# {"status":"ok","name":"steven-blog-mcp","version":"0.2.0", ...}
 ```
 
 ## 环境变量
@@ -54,7 +54,7 @@ curl http://127.0.0.1:4002/health
 |---|---|---|---|
 | `INTERNAL_API_KEY` | **是** | — | 内部接口密钥，与 `server/.env` 的 `INTERNAL_API_KEY` 一致 |
 | `MCP_PORT` | 否 | `4002` | 本服务监听端口 |
-| `BLOG_API_BASE_URL` | 否 | `https://hanphone.cn/api` | 博客 API 地址；本地联调后端时用 `http://localhost:8090` |
+| `BLOG_API_BASE_URL` | 否 | `https://steven.cn/api` | 博客 API 地址；本地联调后端时用 `http://localhost:8090` |
 | `MCP_AUTHOR_ID` | 随笔必填 | — | 创建内容时的作者用户 ID（管理员）。可先用 `list_users` 工具查询 |
 | `MCP_AUTHOR_NICKNAME` | 否 | `博主` | 管理员回复留言时显示的昵称 |
 | `MCP_VERIFY_CACHE_TTL_MS` | 否 | `60000` | 密钥校验结果的内存缓存 TTL（ms），60s 内重复请求同一 bearer 不会再打后端 |
@@ -72,7 +72,7 @@ cd server && mvn clean package -DskipTests
 # 重启 blog 服务（按现有部署方式）
 ```
 
-确认 `server/.env` 中已配置 `INTERNAL_API_KEY`（与 hanphone-chat 共用同一密钥）。
+确认 `server/.env` 中已配置 `INTERNAL_API_KEY`（与 steven-chat 共用同一密钥）。
 
 ### 2. 常驻 MCP server
 
@@ -84,7 +84,7 @@ pm2 save
 
 ### 3. nginx 反代
 
-在 `hanphone.cn` 的 server 块中追加：
+在 `steven.cn` 的 server 块中追加：
 
 ```nginx
 location = /mcp {
@@ -107,7 +107,7 @@ location = /mcp {
 ### Claude Code
 
 ```bash
-claude mcp add --transport http hanphone-blog https://hanphone.cn/mcp \
+claude mcp add --transport http steven-blog https://steven.cn/mcp \
   --header "Authorization: Bearer <在后台生成的 MCP API Key>"
 ```
 
@@ -116,9 +116,9 @@ claude mcp add --transport http hanphone-blog https://hanphone.cn/mcp \
 ```json
 {
   "mcpServers": {
-    "hanphone-blog": {
+    "steven-blog": {
       "type": "http",
-      "url": "https://hanphone.cn/mcp",
+      "url": "https://steven.cn/mcp",
       "headers": {
         "Authorization": "Bearer <在后台生成的 MCP API Key>"
       }

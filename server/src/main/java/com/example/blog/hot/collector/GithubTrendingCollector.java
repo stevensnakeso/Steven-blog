@@ -172,7 +172,7 @@ public class GithubTrendingCollector implements HotCollector {
     /** 解析 github.com/trending 页面的仓库列表。 */
     private List<HotItemData> fetchTrending() throws Exception {
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.USER_AGENT, "Mozilla/5.0 (compatible; hanphone-insight-bot)");
+        headers.set(HttpHeaders.USER_AGENT, "Mozilla/5.0 (compatible; steven-insight-bot)");
         headers.setAccept(List.of(MediaType.TEXT_HTML, MediaType.ALL));
 
         ResponseEntity<String> resp = restTemplate.exchange(
@@ -314,7 +314,7 @@ public class GithubTrendingCollector implements HotCollector {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.parseMediaType("application/vnd.github+json")));
         headers.set("X-GitHub-Api-Version", "2022-11-28");
-        headers.set(HttpHeaders.USER_AGENT, "hanphone-insight-bot");
+        headers.set(HttpHeaders.USER_AGENT, "steven-insight-bot");
         if (token != null && !token.isBlank()) {
             headers.setBearerAuth(token.trim());
         }

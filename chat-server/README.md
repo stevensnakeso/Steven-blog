@@ -1,6 +1,6 @@
-# HanPhone Chat - Server
+# Steven Chat - Server
 
-> 📦 已从独立仓库 `HanphoneJan/hanphone-chat` 迁移至此（本仓库 `chat-server/`）。
+> 📦 已从独立仓库 `StevenJan/steven-chat` 迁移至此（本仓库 `chat-server/`）。
 > 协议与部署见仓库 `docs/chat/`（`android-protocol.md` 为 App 对接"唯一事实来源"）。
 
 [![Node.js](https://img.shields.io/badge/Node.js-20.5+-green.svg)](https://nodejs.org/)
@@ -51,8 +51,8 @@
 ### 克隆项目
 
 ```bash
-git clone https://github.com/yourusername/hanphone-chat.git
-cd hanphone-chat/server
+git clone https://github.com/yourusername/steven-chat.git
+cd steven-chat/server
 ```
 
 ### 安装依赖
@@ -448,7 +448,7 @@ pnpm install
 # 2. 编译 TypeScript
 pnpm build
 
-# 3. 启动服务（自动加载 server/.env，应用名：hanphone-chat-server）
+# 3. 启动服务（自动加载 server/.env，应用名：steven-chat-server）
 pm2 start ecosystem.config.cjs
 
 # 4. 保存进程列表（开机自启）
@@ -461,11 +461,11 @@ pm2 status
 pm2 logs
 
 # 重启服务
-pm2 restart hanphone-chat-server
+pm2 restart steven-chat-server
 
 # 停止 / 删除
-pm2 stop hanphone-chat-server
-pm2 delete hanphone-chat-server
+pm2 stop steven-chat-server
+pm2 delete steven-chat-server
 ```
 
 > `ecosystem.config.cjs` 已通过 `node_args: "--import=dotenv/config"` 自动加载 `.env`，
@@ -477,13 +477,13 @@ pm2 delete hanphone-chat-server
 
 ```bash
 # 构建镜像
-docker build -t hanphone-chat-server .
+docker build -t steven-chat-server .
 
 # 运行（挂载 .env）
-docker run -d --name hanphone-server \
+docker run -d --name steven-server \
   -p 4010:4010 \
   --env-file .env \
-  hanphone-chat-server
+  steven-chat-server
 ```
 
 > 完整全栈（PostgreSQL + Qdrant + Agent + Server + Client）请使用仓库根目录的

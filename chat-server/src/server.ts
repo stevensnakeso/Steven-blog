@@ -251,7 +251,7 @@ app.use(publicRoomRoutes);
 
 // 健康检查端点（用于 Docker 健康检查）
 app.get('/health', (req: Request, res: Response) => {
-  res.json({ status: 'healthy', service: 'hanphone-server', timestamp: new Date().toISOString() });
+  res.json({ status: 'healthy', service: 'steven-server', timestamp: new Date().toISOString() });
 });
 
 // [调试日志] 添加一个中间件来打印所有传入的HTTP请求

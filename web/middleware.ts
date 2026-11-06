@@ -14,7 +14,7 @@ import type { NextRequest } from 'next/server'
  */
 
 // 规范化域名配置
-const PRIMARY_DOMAIN = process.env.PRIMARY_DOMAIN || 'hanphone.cn'
+const PRIMARY_DOMAIN = process.env.PRIMARY_DOMAIN || 'steven.cn'
 
 export function middleware(request: NextRequest) {
   const url = request.nextUrl
@@ -22,7 +22,7 @@ export function middleware(request: NextRequest) {
 
   // 1. 301重定向：非www域名重定向到www域名
   // 只在生产环境且不是localhost时执行
-  // 注意：hanphone.top 的请求不会到达此 middleware，因为由独立 Nginx 配置处理
+  // 注意：steven.top 的请求不会到达此 middleware，因为由独立 Nginx 配置处理
   if (
     process.env.NODE_ENV === 'production' &&
     hostname !== PRIMARY_DOMAIN &&

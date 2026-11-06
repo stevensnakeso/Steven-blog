@@ -238,8 +238,8 @@ export const useUserStore = defineStore('user', {
 
 ```typescript
 // src/api/api.ts
-export const API_BASE_URL = 'https://hanphone.cn/nodejs/atlas'
-export const BLOG_BASE_URL = 'https://hanphone.cn/api'
+export const API_BASE_URL = 'https://steven.cn/nodejs/atlas'
+export const BLOG_BASE_URL = 'https://steven.cn/api'
 
 export const ENDPOINTS = {
   LOGIN: `${BLOG_BASE_URL}/login`,
@@ -448,7 +448,7 @@ VitePWA({
     short_name: '照片墙',
     icons: [
       {
-        src: 'https://hanphone.top/blog/atlas/icon.png',
+        src: 'https://steven.top/blog/atlas/icon.png',
         sizes: '144x144'
       }
     ]
@@ -545,7 +545,7 @@ export default defineConfig({
 export const API_BASE_URL = 'http://localhost:4001'
 
 // 生产环境
-export const API_BASE_URL = 'https://hanphone.cn/nodejs/atlas'
+export const API_BASE_URL = 'https://steven.cn/nodejs/atlas'
 ```
 
 ### Q: PWA缓存如何清理？

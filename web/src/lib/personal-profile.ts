@@ -6,7 +6,7 @@
  */
 
 // 从环境变量读取域名配置
-const fileDomain = process.env.NEXT_PUBLIC_FILE_DOMAIN || 'hanphone.top'
+const fileDomain = process.env.NEXT_PUBLIC_FILE_DOMAIN || 'steven.top'
 
 // ==================== 基础资料 ====================
 export const PROFILE = {
@@ -24,17 +24,17 @@ export const PROFILE = {
 
 // ==================== 社交媒体与链接 ====================
 export const SOCIAL_LINKS = [
-  { platform: 'github', url: 'https://github.com/HanphoneJan/', label: 'GitHub' },
+  { platform: 'github', url: 'https://github.com/StevenJan/', label: 'GitHub' },
   { platform: 'bilibili', url: 'https://space.bilibili.com/649062555/', label: 'Bilibili' },
   { platform: 'email', url: 'mailto:janhizian@qq.com', label: 'Email' },
-  { platform: 'x', url: 'https://x.com/hanphonejan', label: 'X' },
-  { platform: 'youtube', url: 'https://youtube.com/@Hanphone', label: 'YouTube' }
+  { platform: 'x', url: 'https://x.com/stevenjan', label: 'X' },
+  { platform: 'youtube', url: 'https://youtube.com/@Steven', label: 'YouTube' }
 ] as const
 
 // ==================== 外部链接 ====================
 export const EXTERNAL_LINKS = {
   docs: {
-    href: 'https://docs.hanphone.cn',
+    href: 'https://docs.steven.cn',
     text: '技术文档站'
   }
 } as const

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 内部 API 控制器 — 供 hanphone-chat 等内部服务调用
+ * 内部 API 控制器 — 供 steven-chat 等内部服务调用
  *
  * 鉴权方式：请求头 X-Internal-Key
  * 这些接口不经过 TokenInterceptor，使用独立的密钥验证

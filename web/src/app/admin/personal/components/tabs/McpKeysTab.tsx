@@ -19,12 +19,12 @@ interface McpKeysTabProps {
   regenerateKey: (id: number) => Promise<McpKeyDetail | null>
 }
 
-const MCP_ENDPOINT = 'https://hanphone.cn/mcp'
+const MCP_ENDPOINT = 'https://steven.cn/mcp'
 
 // 通用 MCP 配置（标准 mcpServers 格式，适用于 OpenCode、CodeX 等支持 MCP 的客户端）
 const mcpConfigSnippet = `{
   "mcpServers": {
-    "hanphone-blog": {
+    "steven-blog": {
       "type": "http",
       "url": "${MCP_ENDPOINT}",
       "headers": {
@@ -36,17 +36,17 @@ const mcpConfigSnippet = `{
 
 // 常见应用命令行接入示例
 const cliSnippet = `# 先导出密钥为环境变量（避免明文写在配置里）
-export HANPHONE_MCP_KEY="<在后台生成的 MCP API Key>"
+export STEVEN_MCP_KEY="<在后台生成的 MCP API Key>"
 
 # OpenCode
-opencode mcp add hanphone-blog \\
+opencode mcp add steven-blog \\
   --url ${MCP_ENDPOINT} \\
-  --header "Authorization: Bearer $HANPHONE_MCP_KEY"
+  --header "Authorization: Bearer $STEVEN_MCP_KEY"
 
 # CodeX
-codex mcp add hanphone-blog \\
+codex mcp add steven-blog \\
   --url ${MCP_ENDPOINT} \\
-  --bearer-token-env-var HANPHONE_MCP_KEY`
+  --bearer-token-env-var STEVEN_MCP_KEY`
 
 export function McpKeysTab(props: McpKeysTabProps) {
   const {
@@ -281,7 +281,7 @@ export function McpKeysTab(props: McpKeysTabProps) {
                 <div className="p-4 space-y-4 text-sm">
                   <p className="text-[rgb(var(--text-muted))]">
                     创建密钥后，将其作为 Bearer 令牌配置到支持 MCP 的 Agent 中，即可远程操作博客。端点统一为
-                    <code className="mx-1 px-1.5 py-0.5 rounded bg-[rgb(var(--hover))] font-mono text-xs">https://hanphone.cn/mcp</code>。
+                    <code className="mx-1 px-1.5 py-0.5 rounded bg-[rgb(var(--hover))] font-mono text-xs">https://steven.cn/mcp</code>。
                   </p>
 
                   <div className="space-y-3">
